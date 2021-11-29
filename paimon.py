@@ -3,7 +3,10 @@ import genshin
 from PIL import Image
 import requests
 from io import BytesIO
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 client = discord.Client()
 @client.event
@@ -61,4 +64,4 @@ async def on_message(message):
 
         await gClient.close()
 
-client.run("OTE0ODE3MjUyMzA0NDk4NzE4.YaSj9Q.hLe4GLhK62LQOvNVdlSGbJQKvpA")
+client.run(os.getenv('TOKEN'))
