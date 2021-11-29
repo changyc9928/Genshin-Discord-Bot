@@ -9,40 +9,48 @@ import io
 import aiohttp
 
 
-domains = {
-    0: "Mondsdalt Weapon",
-    1: "Mondsdalt Talent",
-    2: "Liyue Weapon",
-    3: "Liyue Talent",
-    4: "Inazuma Weapon",
-    5: "Inazuma Talent",
-    6: "Wolf",
-    7: "Azhdaha",
-    8: "Childe",
-    9: "La Signora",
-    "A": "Archaic Petra/Retracing Bolide",
-    "B": "Thundering Fury/Thundersoother",
-    "C": "Viridescent Venerer/Maiden Beloved",
-    "D": "Crimson Witch of Flames/Lavawalker",
-    "E": "Blizzard Strayer/Heart of Depth",
-    "F": "Tenacity of the Millelith/Pale Flame",
-    "G": "Shimenawa's Reminiscence/Emblem of Severed Fate",
-    "H": "Husk of Opulent Dreams/Ocean-Hued Clam",
-    "I": "Bloodstained Chivalry/Noblesse Oblige",
-    "M": "Thunder Manifestation",
-    "N": "Rhodeia of Loch",
-    "O": "Pyro Regisvine",
-    "P": "Pyro Hypostasis",
-    "Q": "Primo Geovishap",
-    "R": "Perpetual Mechanical Array", 
-    "S": "Maguu Kenki",
-    "T": "Hydro Hypostasis",
-    "U": "Golden Wolflord",
-    "V": "Geo Hypostasis",
-    "W": "Electro Hypostasis",
-    "X": "Cryo Regisvine",
-    "Y": "Cryo Hypostasis",
-    "Z": "Anemo Hypostasis"
+weapon_domains = {
+    ":one:": "Mondsdalt Weapon",
+    ":two:": "Liyue Weapon",
+    ":three:": "Inazuma Weapon",
+}
+talent_domains = {
+    ":one:": "Mondsdalt Talent",
+    ":two:": "Liyue Talent",
+    ":three:": "Inazuma Talent"
+}
+trounce_domains = {
+    ":one:": "Wolf",
+    ":two:": "Azhdaha",
+    ":three:": "Childe",
+    ":four:": "La Signora"
+}
+artifact_domains = {
+    ":one:": "Archaic Petra/Retracing Bolide",
+    ":two:": "Thundering Fury/Thundersoother",
+    ":three:": "Viridescent Venerer/Maiden Beloved",
+    ":four:": "Crimson Witch of Flames/Lavawalker",
+    ":five:": "Blizzard Strayer/Heart of Depth",
+    ":six:": "Tenacity of the Millelith/Pale Flame",
+    ":seven:": "Shimenawa's Reminiscence/Emblem of Severed Fate",
+    ":eight:": "Husk of Opulent Dreams/Ocean-Hued Clam",
+    ":nine:": "Bloodstained Chivalry/Noblesse Oblige"
+}
+world_bosses = {
+    ":one:": "Thunder Manifestation",
+    ":two:": "Rhodeia of Loch",
+    ":three:": "Pyro Regisvine",
+    ":four:": "Pyro Hypostasis",
+    ":five:": "Primo Geovishap",
+    ":six:": "Perpetual Mechanical Array", 
+    ":seven:": "Maguu Kenki",
+    ":eight:": "Hydro Hypostasis",
+    ":nine:": "Golden Wolflord",
+    ":zero:": "Geo Hypostasis",
+    ":regional_indicator_a:": "Electro Hypostasis",
+    ":regional_indicator_b:": "Cryo Regisvine",
+    ":regional_indicator_c:": "Cryo Hypostasis",
+    ":regional_indicator_d:": "Anemo Hypostasis"
 }
 
 client = discord.Client()
@@ -56,10 +64,30 @@ async def on_message(message):
         return
 
     if message.content.startswith("!hello"):
-        menu = ""
-        for key, value in domains.items():
+        greetings = await message.channel.send("Hi Travalers @everyone! Are you going to join the coop today at 10.30pm?")
+        await greetings.add_reaction(u"\u2611")
+        await greetings.add_reaction("❌")
+        menu = "**Weapon Domains**\n"
+        for key, value in weapon_domains.items():
             menu += "{}: {}\n".format(key, value)
-        await message.channel.send("Hi Travalers @everyone! Are you going to join the coop today at 10.30pm?\n" + menu)
+        await message.channel.send(menu)
+        menu = "**Talent Books Domains**\n"
+        for key, value in talent_domains.items():
+            menu += "{}: {}\n".format(key, value)
+        await message.channel.send(menu)
+        menu = "**Artifacts Domains**\n"
+        for key, value in artifact_domains.items():
+            menu += "{}: {}\n".format(key, value)
+        await message.channel.send(menu)
+        menu = "**Weekly Bosses**\n"
+        for key, value in trounce_domains.items():
+            menu += "{}: {}\n".format(key, value)
+        await message.channel.send(menu)
+        menu = "**World Bosses**\n"
+        for key, value in world_bosses.items():
+            menu += "{}: {}\n".format(key, value)
+        await message.channel.send(menu)
+
 
     if message.content.startswith("!querystats"):
         cookies = {"ltuid": 119480035, "ltoken": "cnF7TiZqHAAvYqgCBoSPx5EjwezOh1ZHoqSHf7dT"}
