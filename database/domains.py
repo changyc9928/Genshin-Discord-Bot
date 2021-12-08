@@ -4,7 +4,7 @@ leylines = {
 }
 weapon_domains = {
     "Cecilia Garden (Mondsdalt)": "Decarabian's/Wolf's/Dendelion Gladiator",
-    "Hidden Palace of Lianshan Formula (Liyue)": "Guyun/Elizir/Aerosiderite",
+    "Hidden Palace of Lianshan Formula (Liyue)": "Guyun/Elixir/Aerosiderite",
     "Court of Flowing Sand (Inazuma)": "Branch of a Distant Sea/Narukami's/Mask",
 }
 talent_domains = {
@@ -44,4 +44,13 @@ world_bosses = {
     ":regional_indicator_b:": "Cryo Regisvine",
     ":regional_indicator_c:": "Cryo Hypostasis",
     ":regional_indicator_d:": "Anemo Hypostasis"
+}
+
+domains = {
+    "Ley Line Outcrops": leylines,
+    "Weapon Ascension Materials": weapon_domains,
+    "Talent Books": talent_domains,
+    "Artifacts": artifact_domains,
+    "Trounce Domains": trounce_domains,
+    "World Boss": world_bosses
 }

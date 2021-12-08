@@ -1,69 +1,55 @@
 import discord
-from database.domains import *
+from database.domains import domains
+from database.coop import Coop
 
 
-class LeyLineDropdown(discord.ui.Select):
-    def __init__(self):
+class DomainDropdown(discord.ui.Select):
+    def __init__(self, label):
+        self.tag = label
         options = []
 
-        for name, material in leylines.items():
+        for name, material in domains[label].items():
             options.append(discord.SelectOption(label=name, description=material))
 
         super().__init__(
-            placeholder="Choose your favourite colour...",
+            placeholder="Choose the domain(s) you want to farm today...",
             min_values=1,
-            max_values=len(leylines),
+            max_values=len(domains[label]),
             options=options,
         )
 
     async def callback(self, interaction: discord.Interaction):
+        if self.tag == "Ley Line Outcrops":
+            Coop.data[interaction.user.id].leyline = []
+            data = Coop.data[interaction.user.id].leyline
+        elif self.tag == "Weapon Ascension Materials":
+            Coop.data[interaction.user.id].weapon = []
+            data = Coop.data[interaction.user.id].weapon
+        elif self.tag == "Talent Books":
+            Coop.data[interaction.user.id].talent = []
+            data = Coop.data[interaction.user.id].talent
+        elif self.tag == "Artifacts":
+            Coop.data[interaction.user.id].artifact = []
+            data = Coop.data[interaction.user.id].artifact
+        elif self.tag == "Trounce Domains":
+            Coop.data[interaction.user.id].trounce = []
+            data = Coop.data[interaction.user.id].trounce
+        elif self.tag == "World Boss":
+            Coop.data[interaction.user.id].world_boss = []
+            data = Coop.data[interaction.user.id].world_boss
         ret = ""
         for val in self.values:
             ret += f"You're attending {val}\n"
+            data.append(val)
+        msg = await interaction.channel.fetch_message(Coop.message_id)
+        embed = discord.Embed(title="Coop JSON here", description=f"```{Coop.convert_to_json()}```")
+        await msg.edit(embed=embed)
         await interaction.response.send_message(ret, ephemeral=True)
 
 
-class LeyLineDropdownView(discord.ui.View):
-    def __init__(self):
+class DomainDropdownView(discord.ui.View):
+    def __init__(self, domains):
         super().__init__()
 
         # Adds the dropdown to our view object.
-        self.add_item(LeyLineDropdown())
-
-
-class WeaponDropdown(discord.ui.Select):
-    def __init__(self):
-    
-        # Set the options that will be presented inside the dropdown
-        options = []
-
-        for location, material in weapon_domains.items():
-            options.append(discord.SelectOption(label=location, description=material))
-
-        # The placeholder is what will be shown when no option is chosen
-        # The min and max values indicate we can only pick one of the three options
-        # The options parameter defines the dropdown options. We defined this above
-        super().__init__(
-            placeholder="Choose your favourite colour...",
-            min_values=1,
-            max_values=len(weapon_domains),
-            options=options,
-        )
-
-    async def callback(self, interaction: discord.Interaction):
-        # Use the interaction object to send a response message containing
-        # the user's choice. The self object refers to the
-        # Select object, and the values attribute gets a list of the user's
-        # selected options.
-        ret = ""
-        for val in self.values:
-            ret += f"You're attending {val}\n"
-        await interaction.response.send_message(ret, ephemeral=True)
-
-
-class WeaponDropdownView(discord.ui.View):
-    def __init__(self):
-        super().__init__()
-
-        # Adds the dropdown to our view object.
-        self.add_item(WeaponDropdown())
+        self.add_item(DomainDropdown(domains))

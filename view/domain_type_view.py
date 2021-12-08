@@ -1,5 +1,6 @@
 import discord
 from view.dropdown_view import *
+from database.domains import domains
 
 
 class DomainTypeButton(discord.ui.Button["DomainOptionView"]):
@@ -8,10 +9,7 @@ class DomainTypeButton(discord.ui.Button["DomainOptionView"]):
         self.label = label
 
     async def callback(self, interaction: discord.Interaction):
-        if self.label == "Ley Line Outcrops":
-            await interaction.response.send_message("Please choose which kind of ley line you want to farm", view=LeyLineDropdownView(), ephemeral=True)
-        if self.label == "Weapon Ascension Materials":
-            await interaction.response.send_message("Please choose your domain(s) to farm", view=WeaponDropdownView(), ephemeral=True)
+        await interaction.response.send_message("Please choose the domain(s)/boss(es) you want to farm", view=DomainDropdownView(self.label), ephemeral=True)
 
 
 class DomainOptionView(discord.ui.View):
