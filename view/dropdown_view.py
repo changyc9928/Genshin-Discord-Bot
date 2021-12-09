@@ -20,28 +20,7 @@ class DomainDropdown(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         try:
-            if self.tag == "Ley Line Outcrops":
-                Coop.data[interaction.user.id].leyline = []
-                data = Coop.data[interaction.user.id].leyline
-            elif self.tag == "Weapon Ascension Materials":
-                Coop.data[interaction.user.id].weapon = []
-                data = Coop.data[interaction.user.id].weapon
-            elif self.tag == "Talent Books":
-                Coop.data[interaction.user.id].talent = []
-                data = Coop.data[interaction.user.id].talent
-            elif self.tag == "Artifacts":
-                Coop.data[interaction.user.id].artifact = []
-                data = Coop.data[interaction.user.id].artifact
-            elif self.tag == "Trounce Domains":
-                Coop.data[interaction.user.id].trounce = []
-                data = Coop.data[interaction.user.id].trounce
-            elif self.tag == "World Boss":
-                Coop.data[interaction.user.id].world_boss = []
-                data = Coop.data[interaction.user.id].world_boss
-            ret = ""
-            for val in self.values:
-                ret += f"You're attending {val}\n"
-                data.append(val)
+            ret = Coop.data[interaction.user.id].book(self.tag, self.values)
             msg = await interaction.channel.fetch_message(Coop.message_id)
             embed = discord.Embed(title="Coop JSON here", description=f"```{Coop.convert_to_json()}```")
             await msg.edit(embed=embed)

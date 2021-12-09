@@ -25,3 +25,31 @@ class UserData:
         self.ltoken = 0
         self.luid = 0
         self.authkey = None
+
+    def book(self, tag, values):
+        if tag == "Ley Line Outcrops":
+            self.leyline = []
+            data = self.leyline
+        elif tag == "Weapon Ascension Materials":
+            self.weapon = []
+            data = self.weapon
+        elif tag == "Talent Books":
+            self.talent = []
+            data = self.talent
+        elif tag == "Artifacts":
+            self.artifact = []
+            data = self.artifact
+        elif tag == "Trounce Domains":
+            self.trounce = []
+            data = self.trounce
+        elif tag == "World Boss":
+            self.world_boss = []
+            data = self.world_boss
+        ret = ""
+        for val in values:
+            ret += f"You're attending {val}\n"
+            data.append(val)
+        return ret
+
+    def change_time(self, msg):
+        self.time = datetime.datetime.today().replace(hour=int(msg[:2]), minute=int(msg[2:]), second=0, microsecond=0).astimezone().strftime('%Y-%m-%d %H:%M %Z')

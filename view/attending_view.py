@@ -30,11 +30,11 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
                 return
 
             def check(m):
-                return re.match("([0-1][0-9])|2[0-3][0-5][0-9]", m.content) and m.channel == interaction.channel
+                return re.match("([0-1][0-9]|2[0-3])[0-5][0-9]", m.content) is not None and m.channel == interaction.channel
 
             await interaction.response.send_message(f"What time you want to want instead in 24 hour time (HHMM)? {user.name}")
             response = await self.bot.wait_for("message", check=check)
-            Coop.data[user.id].time = datetime.datetime.today().replace(hour=int(response.content[:2]), minute=int(response.content[2:]), second=0, microsecond=0).astimezone().strftime('%Y-%m-%d %H:%M %Z')
+            Coop.data[user.id].change_time(response.content)
             await interaction.channel.send(f"{response.author.name}, Paimon has changed your online time to {Coop.data[user.id].time}.")
         embed = discord.Embed(title="Coop JSON here", description=f"```{Coop.convert_to_json()}```")
         await msg.edit(embed=embed)
