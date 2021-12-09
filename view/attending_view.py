@@ -1,4 +1,3 @@
-import datetime
 import discord
 import re
 
@@ -16,13 +15,11 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
         user = interaction.user
         msg = await interaction.channel.fetch_message(Coop.message_id)
         if self.label == "Coming":
-            if user.id not in Coop.data:
-                Coop.data[user.id] = UserData(user.name)
+            Coop.add_user(user)
             await interaction.response.send_message(f"Paimon wonder what kind of domains are you farming today from the list below 🤔", view=DomainOptionView(), ephemeral=True)
         elif self.label == "Skipping":
             # reset his coop data
-            if user.id in Coop.data:
-                del Coop.data[user.id]
+            Coop.delete_user(user)
             # await interaction.response.send_message(f"{user} is not coming!")
         elif self.label == "Change time":
             if user.id not in Coop.data:

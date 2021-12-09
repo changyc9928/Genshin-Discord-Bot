@@ -11,6 +11,22 @@ class Coop:
     def convert_to_json():
         return json.dumps(Coop.data, default=lambda o: o.__dict__, indent=4)
 
+    @staticmethod
+    def add_user(user):
+        if user.id not in Coop.data:
+            Coop.data[user.id] = UserData(user.name)
+            Coop.save_json()
+    
+    @staticmethod
+    def delete_user(user):
+        if user.id in Coop.data:
+            del Coop.data[user.id]
+            Coop.save_json()
+
+    def save_json():
+        with open('data.json', 'w', encoding='utf-8') as f:
+            json.dump(Coop.data, f, ensure_ascii=False, indent=4, default=lambda o: o.__dict__)
+
 
 class UserData:
     def __init__(self, name) -> None:
@@ -49,6 +65,7 @@ class UserData:
         for val in values:
             ret += f"You're attending {val}\n"
             data.append(val)
+        Coop.save_json()
         return ret
 
     def change_time(self, msg):
@@ -56,3 +73,4 @@ class UserData:
         if 0 <= int(msg) <= 60:
             self.time += datetime.timedelta(days=1)
         self.time = self.time.strftime('%Y-%m-%d %H:%M %Z')
+        Coop.save_json()

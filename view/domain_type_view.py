@@ -1,6 +1,5 @@
 import discord
 from view.dropdown_view import *
-from database.domains import domains
 
 
 class DomainTypeButton(discord.ui.Button["DomainOptionView"]):
