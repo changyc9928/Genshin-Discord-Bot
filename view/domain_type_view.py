@@ -9,7 +9,10 @@ class DomainTypeButton(discord.ui.Button["DomainOptionView"]):
         self.label = label
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message("Please choose the domain(s)/boss(es) you want to farm", view=DomainDropdownView(self.label), ephemeral=True)
+        if interaction.user.id in Coop.data:
+            await interaction.response.send_message("Please choose the domain(s)/boss(es) you want to farm", view=DomainDropdownView(self.label), ephemeral=True)
+        else:
+            await interaction.response.send_message("You're not coming today!", ephemeral=True)
 
 
 class DomainOptionView(discord.ui.View):
