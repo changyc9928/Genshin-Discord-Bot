@@ -1,5 +1,6 @@
 import datetime
 import json
+import os.path
 
 
 class Coop:
@@ -13,6 +14,8 @@ class Coop:
 
     @staticmethod
     def load_json():
+        if not os.path.isfile("data.json"):
+            return
         with open("data.json", "r") as file:
             data_ = json.loads(file.read())
         for user_id, data in data_.items():
