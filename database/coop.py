@@ -12,6 +12,24 @@ class Coop:
         return json.dumps(Coop.data, default=lambda o: o.__dict__, indent=4)
 
     @staticmethod
+    def load_json():
+        with open("data.json", "r") as file:
+            data_ = json.loads(file.read())
+        for user_id, data in data_.items():
+            new_user = UserData(data["name"])
+            new_user.time = data["time"]
+            new_user.weapon = data["weapon"]
+            new_user.leyline = data["leyline"]
+            new_user.talent = data["talent"]
+            new_user.world_boss = data["world_boss"]
+            new_user.trounce = data["trounce"]
+
+            new_user.ltoken = data["ltoken"]
+            new_user.luid = data["luid"]
+            new_user.authkey = data["authkey"]
+            Coop.data[int(user_id)] = new_user
+
+    @staticmethod
     def add_user(user):
         if user.id not in Coop.data:
             Coop.data[user.id] = UserData(user.name)

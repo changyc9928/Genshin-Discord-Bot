@@ -1,5 +1,4 @@
 import discord
-import genshin
 import os
 
 from database.coop import Coop
@@ -22,7 +21,9 @@ bot = PaimonBot()
 
 @bot.command()
 async def coop(ctx: commands.Context):
-    embed = discord.Embed(title="Coop JSON here", description="```{}```")
+    Coop.load_json()
+    des = Coop.convert_to_json()
+    embed = discord.Embed(title="Coop JSON here", description=f"```{des}```")
     msg = await ctx.send("@everyone Hi Travalers, are you coming today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed)
     Coop.message_id = msg.id
 
