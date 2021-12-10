@@ -31,7 +31,7 @@ class Coop:
 class UserData:
     def __init__(self, name) -> None:
         self.name = name
-        self.time = datetime.datetime.today().replace(hour=22, minute=30, second=0, microsecond=0).astimezone().strftime('%Y-%m-%d %H:%M %Z')
+        self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(hour=22, minute=30, second=0, microsecond=0).strftime('%Y-%m-%d %H:%M %Z')
         self.weapon = []
         self.leyline = []
         self.talent = []
@@ -69,7 +69,7 @@ class UserData:
         return ret
 
     def change_time(self, msg):
-        self.time = datetime.datetime.today().replace(hour=int(msg[:2]), minute=int(msg[2:]), second=0, microsecond=0).astimezone()
+        self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(hour=int(msg[:2]), minute=int(msg[2:]), second=0, microsecond=0)
         if 0 <= int(msg) <= 60:
             self.time += datetime.timedelta(days=1)
         self.time = self.time.strftime('%Y-%m-%d %H:%M %Z')
