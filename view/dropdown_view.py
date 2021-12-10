@@ -31,7 +31,7 @@ class DomainDropdown(discord.ui.Select):
 
 class DomainDropdownView(discord.ui.View):
     def __init__(self, domains):
-        super().__init__()
+        super().__init__(timeout=None)
 
         # Adds the dropdown to our view object.
         self.add_item(DomainDropdown(domains))

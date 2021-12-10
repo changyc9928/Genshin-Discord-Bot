@@ -39,7 +39,7 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
 
 class AttendingView(discord.ui.View):
     def __init__(self, bot: discord.ext.commands.bot):
-        super().__init__()
+        super().__init__(timeout=None)
         self.add_item(AttendingButton("Coming", discord.ButtonStyle.success, bot))
         self.add_item(AttendingButton("Skipping", discord.ButtonStyle.danger, bot))
         self.add_item(AttendingButton("Change time", discord.ButtonStyle.secondary, bot))
