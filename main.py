@@ -3,6 +3,7 @@ import os
 import datetime
 import asyncio
 import genshin
+import csv
 
 from database.coop import Coop
 from discord.ext import commands
@@ -95,17 +96,22 @@ async def primo(ctx: commands.Context, url: str=None):
     client = genshin.GenshinClient(cookies)
     client.authkey = genshin.get_authkey()
     freq = {}
-    async for trans in client.transaction_log("primogem"):
-        key = ""
-        for i in range(1, len(patch)):
-            if patch[i-1] <= trans.time < patch[i]:
-                key = patch_no[i-1]
-        if key not in freq:
-            freq[key] = {}
-        if trans.reason not in freq[key]:
-            freq[key][trans.reason] = 0
-        freq[key][trans.reason] += trans.amount
-    # ret = ""
+    # kind='primogem' id=1628258400000123727 uid=828918158 time=datetime.datetime(2021, 8, 6, 22, 3, 6, tzinfo=datetime.timezone.utc) amount=10 reason_id=1049 reason='Achievement reward'
+    with open(f'{ctx.author.name}\'s primogems transaction.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Time", "Reason", "Amount"])
+        async for trans in client.transaction_log("primogem"):
+            writer.writerow([trans.time.strftime('%Y-%m-%d %H:%M %Z'), trans.reason, trans.amount])
+            key = ""
+            for i in range(1, len(patch)):
+                if patch[i-1] <= trans.time < patch[i]:
+                    key = patch_no[i-1]
+            if key not in freq:
+                freq[key] = {}
+            if trans.reason not in freq[key]:
+                freq[key][trans.reason] = 0
+            freq[key][trans.reason] += trans.amount
+            
     for key, value in freq.items():
         ret = ""
         total = 0
@@ -116,7 +122,8 @@ async def primo(ctx: commands.Context, url: str=None):
         ret += f"**Total: {total}**\n"
         ret += "\n\n"
         await ctx.send(ret)
-
+    await ctx.send(file=discord.File(f'{ctx.author.name}\'s primogems transaction.csv'))
+    os.remove(f'{ctx.author.name}\'s primogems transaction.csv')
     await client.close()
 
 load_dotenv()
