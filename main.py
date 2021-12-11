@@ -94,7 +94,7 @@ async def primo(ctx: commands.Context, url: str=None):
     ]
     cookies = {"ltuid": 131897908, "ltoken": "PUvLWxC9lWijYCyi8ewhsxj3riKLc763kB85JPuH"}
     client = genshin.GenshinClient(cookies)
-    client.authkey = genshin.get_authkey()
+    client.authkey = genshin.extract_authkey(url)
     freq = {}
     # kind='primogem' id=1628258400000123727 uid=828918158 time=datetime.datetime(2021, 8, 6, 22, 3, 6, tzinfo=datetime.timezone.utc) amount=10 reason_id=1049 reason='Achievement reward'
     with open(f'{ctx.author.name}\'s primogems transaction.csv', 'w', newline='') as file:
@@ -111,7 +111,7 @@ async def primo(ctx: commands.Context, url: str=None):
             if trans.reason not in freq[key]:
                 freq[key][trans.reason] = 0
             freq[key][trans.reason] += trans.amount
-            
+
     for key, value in freq.items():
         ret = ""
         total = 0
