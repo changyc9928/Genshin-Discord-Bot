@@ -9,7 +9,8 @@ class DomainDropdown(discord.ui.Select):
         options = []
 
         for name, material in domains[label].items():
-            options.append(discord.SelectOption(label=name, description=material))
+            options.append(discord.SelectOption(
+                label=name, description=material))
 
         super().__init__(
             placeholder="Choose the domain(s) you want to farm today...",
@@ -22,7 +23,8 @@ class DomainDropdown(discord.ui.Select):
         try:
             ret = Coop.data[interaction.user.id].book(self.tag, self.values)
             msg = await interaction.channel.fetch_message(Coop.message_id)
-            embed = discord.Embed(title="Coop JSON here", description=f"```{Coop.convert_to_json()}```")
+            embed = discord.Embed(title="Coop JSON here",
+                                  description=f"```{Coop.convert_to_json()}```")
             await msg.edit(embed=embed)
             await interaction.response.send_message(ret, ephemeral=True)
         except:

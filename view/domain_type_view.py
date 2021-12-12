@@ -17,8 +17,8 @@ class DomainTypeButton(discord.ui.Button["DomainOptionView"]):
 class DomainOptionView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(DomainTypeButton("Ley Line Outcrops"))   
-        self.add_item(DomainTypeButton("Weapon Ascension Materials")) 
+        self.add_item(DomainTypeButton("Ley Line Outcrops"))
+        self.add_item(DomainTypeButton("Weapon Ascension Materials"))
         self.add_item(DomainTypeButton("Talent Books"))
         self.add_item(DomainTypeButton("Artifacts"))
         self.add_item(DomainTypeButton("Trounce Domains"))

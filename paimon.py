@@ -42,7 +42,7 @@ world_bosses = {
     ":three:": "Pyro Regisvine",
     ":four:": "Pyro Hypostasis",
     ":five:": "Primo Geovishap",
-    ":six:": "Perpetual Mechanical Array", 
+    ":six:": "Perpetual Mechanical Array",
     ":seven:": "Maguu Kenki",
     ":eight:": "Hydro Hypostasis",
     ":nine:": "Golden Wolflord",
@@ -54,9 +54,12 @@ world_bosses = {
 }
 
 client = discord.Client()
+
+
 @client.event
 async def on_ready():
     print("Your best campanion {} is here".format(client.user))
+
 
 @client.event
 async def on_message(message):
@@ -88,9 +91,9 @@ async def on_message(message):
             menu += "{}: {}\n".format(key, value)
         await message.channel.send(menu)
 
-
     if message.content.startswith("!querystats"):
-        cookies = {"ltuid": 119480035, "ltoken": "cnF7TiZqHAAvYqgCBoSPx5EjwezOh1ZHoqSHf7dT"}
+        cookies = {"ltuid": 119480035,
+                   "ltoken": "cnF7TiZqHAAvYqgCBoSPx5EjwezOh1ZHoqSHf7dT"}
         gClient = genshin.GenshinClient(cookies)
 
         data = await gClient.get_user(int(message.content[11:]))
@@ -104,8 +107,8 @@ async def on_message(message):
                     data = io.BytesIO(await resp.read())
                     await message.channel.send(file=discord.File(data, 'cool_image.png'))
 
-            reply +=  "{}\n".format(field.name) + "-" * 83 + "\n" \
-                    + "{}% explored\n".format(field.percentage)
+            reply += "{}\n".format(field.name) + "-" * 83 + "\n" \
+                + "{}% explored\n".format(field.percentage)
             if field.type == "Reputation":
                 reply += "{} level: {}\n".format(field.type, field.level)
             if len(field.offerings) > 0:
@@ -116,9 +119,10 @@ async def on_message(message):
             await message.channel.send(reply)
 
         await gClient.close()
-    
+
     if message.content.startswith("!character"):
-        cookies = {"ltuid": 131897908, "ltoken": "PUvLWxC9lWijYCyi8ewhsxj3riKLc763kB85JPuH"}
+        cookies = {"ltuid": 131897908,
+                   "ltoken": "PUvLWxC9lWijYCyi8ewhsxj3riKLc763kB85JPuH"}
         gClient = genshin.GenshinClient(cookies)
 
         data = await gClient.get_partial_user(int(message.content[11:]))

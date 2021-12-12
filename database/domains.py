@@ -35,7 +35,7 @@ world_bosses = {
     ":three:": "Pyro Regisvine",
     ":four:": "Pyro Hypostasis",
     ":five:": "Primo Geovishap",
-    ":six:": "Perpetual Mechanical Array", 
+    ":six:": "Perpetual Mechanical Array",
     ":seven:": "Maguu Kenki",
     ":eight:": "Hydro Hypostasis",
     ":nine:": "Golden Wolflord",

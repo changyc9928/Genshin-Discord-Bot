@@ -19,7 +19,7 @@ class Coop:
         with open("data.json", "r") as file:
             data_ = json.loads(file.read())
         for user_id, data in data_.items():
-            new_user = UserData(data["name"])
+            new_user = CoopData(data["name"])
             new_user.time = data["time"]
             new_user.weapon = data["weapon"]
             new_user.leyline = data["leyline"]
@@ -35,9 +35,9 @@ class Coop:
     @staticmethod
     def add_user(user):
         if user.id not in Coop.data:
-            Coop.data[user.id] = UserData(user.name)
+            Coop.data[user.id] = CoopData(user.name)
             Coop.save_json()
-    
+
     @staticmethod
     def delete_user(user):
         if user.id in Coop.data:
@@ -46,13 +46,19 @@ class Coop:
 
     def save_json():
         with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump(Coop.data, f, ensure_ascii=False, indent=4, default=lambda o: o.__dict__)
+            json.dump(Coop.data, f, ensure_ascii=False,
+                      indent=4, default=lambda o: o.__dict__)
+
+    def reset_data():
+        Coop.data = {}
+        Coop.save_json()
 
 
-class UserData:
+class CoopData:
     def __init__(self, name) -> None:
         self.name = name
-        self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(hour=22, minute=30, second=0, microsecond=0).strftime('%Y-%m-%d %H:%M %Z')
+        self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(
+            hour=22, minute=30, second=0, microsecond=0).strftime('%Y-%m-%d %H:%M %Z')
         self.weapon = []
         self.leyline = []
         self.talent = []
@@ -90,7 +96,8 @@ class UserData:
         return ret
 
     def change_time(self, msg):
-        self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(hour=int(msg[:2]), minute=int(msg[2:]), second=0, microsecond=0)
+        self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(
+            hour=int(msg[:2]), minute=int(msg[2:]), second=0, microsecond=0)
         if 0 <= int(msg) <= 60:
             self.time += datetime.timedelta(days=1)
         self.time = self.time.strftime('%Y-%m-%d %H:%M %Z')

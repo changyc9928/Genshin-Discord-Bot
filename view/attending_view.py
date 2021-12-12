@@ -2,7 +2,7 @@ import discord
 import re
 
 from view.domain_type_view import DomainOptionView
-from database.coop import Coop, UserData
+from database.coop import Coop
 
 
 class AttendingButton(discord.ui.Button["AttendingView"]):
@@ -33,13 +33,17 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             response = await self.bot.wait_for("message", check=check)
             Coop.data[user.id].change_time(response.content)
             await interaction.channel.send(f"{response.author.name}, Paimon has changed your online time to {Coop.data[user.id].time}.")
-        embed = discord.Embed(title="Coop JSON here", description=f"```{Coop.convert_to_json()}```")
+        embed = discord.Embed(title="Coop JSON here",
+                              description=f"```{Coop.convert_to_json()}```")
         await msg.edit(embed=embed)
 
 
 class AttendingView(discord.ui.View):
     def __init__(self, bot: discord.ext.commands.bot):
         super().__init__(timeout=None)
-        self.add_item(AttendingButton("Coming", discord.ButtonStyle.success, bot))
-        self.add_item(AttendingButton("Skipping", discord.ButtonStyle.danger, bot))
-        self.add_item(AttendingButton("Change time", discord.ButtonStyle.secondary, bot))
+        self.add_item(AttendingButton(
+            "Coming", discord.ButtonStyle.success, bot))
+        self.add_item(AttendingButton(
+            "Skipping", discord.ButtonStyle.danger, bot))
+        self.add_item(AttendingButton(
+            "Change time", discord.ButtonStyle.secondary, bot))
