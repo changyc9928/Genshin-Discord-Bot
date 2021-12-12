@@ -18,11 +18,11 @@ class PaimonBot(commands.Bot):
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
-        time = datetime.datetime.now(datetime.timezone(datetime.timedelta(
-            hours=8))).replace(hour=18, minute=30, second=0, microsecond=0)
-        await self.coop(gap=1440, time=time)
-        await self.reset_coop(time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
-            hours=8))).replace(hour=14, minute=30, second=0, microsecond=0))
+        # time = datetime.datetime.now(datetime.timezone(datetime.timedelta(
+        #     hours=8))).replace(hour=18, minute=30, second=0, microsecond=0)
+        # await self.coop(gap=1440, time=time)
+        # await self.reset_coop(time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
+        #     hours=8))).replace(hour=14, minute=30, second=0, microsecond=0))
 
     def seconds_until(self, future_exec):
         # given_time = datetime.time(hours, minutes)
@@ -69,6 +69,10 @@ class PaimonBot(commands.Bot):
 
 
 bot = PaimonBot()
+bot.loop.create_task(bot.coop(gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
+    hours=8))).replace(hour=18, minute=30, second=0, microsecond=0)))
+bot.loop.create_task(bot.reset_coop(time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
+    hours=8))).replace(hour=14, minute=30, second=0, microsecond=0)))
 
 
 @bot.command()
