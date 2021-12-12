@@ -22,7 +22,7 @@ class PaimonBot(commands.Bot):
             hours=8))).replace(hour=18, minute=30, second=0, microsecond=0)
         await self.coop(gap=1440, time=time)
         await self.reset_coop(time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
-            hours=8))).replace(hour=14, minute=23, second=0, microsecond=0))
+            hours=8))).replace(hour=14, minute=30, second=0, microsecond=0))
 
     def seconds_until(self, future_exec):
         # given_time = datetime.time(hours, minutes)
@@ -65,6 +65,7 @@ class PaimonBot(commands.Bot):
             await asyncio.sleep(delta)
             Coop.reset_data()
             time += datetime.timedelta(minutes=gap)
+            await self.get_channel(915621292936396821).send("Coop data reset")
 
 
 bot = PaimonBot()
