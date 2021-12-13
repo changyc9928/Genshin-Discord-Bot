@@ -14,7 +14,7 @@ class DomainDropdown(discord.ui.Select):
 
         super().__init__(
             placeholder="Choose the domain(s) you want to farm today...",
-            min_values=1,
+            min_values=0,
             max_values=len(domains[label]),
             options=options,
         )

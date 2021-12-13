@@ -82,7 +82,7 @@ class CoopData:
         elif tag == "World Boss":
             self.world_boss = []
             data = self.world_boss
-        ret = ""
+        ret = f"Paimon canceled all your bookings on {tag} today."
         for val in values:
             ret += f"You're attending {val}\n"
             data.append(val)
