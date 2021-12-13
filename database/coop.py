@@ -23,13 +23,11 @@ class Coop:
             new_user.time = data["time"]
             new_user.weapon = data["weapon"]
             new_user.leyline = data["leyline"]
+            new_user.artifact = data['artifact']
             new_user.talent = data["talent"]
             new_user.world_boss = data["world_boss"]
             new_user.trounce = data["trounce"]
 
-            new_user.ltoken = data["ltoken"]
-            new_user.luid = data["luid"]
-            new_user.authkey = data["authkey"]
             Coop.data[int(user_id)] = new_user
 
     @staticmethod

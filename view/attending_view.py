@@ -29,10 +29,13 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             def check(m):
                 return re.match("([0-1][0-9]|2[0-3])[0-5][0-9]", m.content) is not None and m.channel == interaction.channel
 
-            await interaction.response.send_message(f"What time you want to want instead in 24 hour time (HHMM)? {user.name}")
+            ask = await interaction.response.send_message(f"What time you want to want instead in 24 hour time (HHMM)? {user.mention}")
             response = await self.bot.wait_for("message", check=check)
             Coop.data[user.id].change_time(response.content)
-            await interaction.channel.send(f"{response.author.name}, Paimon has changed your online time to {Coop.data[user.id].time}.")
+            confirm = await interaction.channel.send(f"@{response.author.mention}, Paimon has changed your online time to {Coop.data[user.id].time}.")
+            await ask.delete_original_message()
+            await response.delete()
+            await confirm.delete(delay=2)
         embed = discord.Embed(title="Coop JSON here",
                               description=f"```{Coop.convert_to_json()}```")
         await msg.edit(embed=embed)
