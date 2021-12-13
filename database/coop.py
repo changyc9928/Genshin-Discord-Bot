@@ -83,10 +83,12 @@ class CoopData:
         elif tag == "World Boss":
             self.world_boss = []
             data = self.world_boss
-        ret = f"Paimon canceled all your bookings on {tag} today."
+        ret = ""
         for val in values:
             ret += f"You're attending {val}\n"
             data.append(val)
+        if ret == "":
+            ret = f"Paimon canceled all your bookings on {tag} today."
         Coop.save_json()
         return ret
 
