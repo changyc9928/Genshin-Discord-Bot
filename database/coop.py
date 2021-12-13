@@ -60,6 +60,7 @@ class CoopData:
         self.weapon = []
         self.leyline = []
         self.talent = []
+        self.artifact = []
         self.world_boss = []
         self.trounce = []
 
