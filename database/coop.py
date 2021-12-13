@@ -65,10 +65,6 @@ class CoopData:
         self.world_boss = []
         self.trounce = []
 
-        self.ltoken = 0
-        self.luid = 0
-        self.authkey = None
-
     def book(self, tag, values):
         if tag == "Ley Line Outcrops":
             self.leyline = []
