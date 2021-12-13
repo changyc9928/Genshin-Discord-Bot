@@ -2,7 +2,6 @@ import discord
 import os
 import datetime
 import asyncio
-import genshin
 import csv
 
 from database.members import ServerData
@@ -10,6 +9,7 @@ from database.coop import Coop
 from discord.ext import commands
 from dotenv.main import load_dotenv
 from view.attending_view import AttendingView
+from query_graphql import query_image
 
 
 class PaimonBot(commands.Bot):
@@ -32,7 +32,8 @@ class PaimonBot(commands.Bot):
         des = Coop.convert_to_json()
         embed = discord.Embed(title="Coop JSON here",
                               description=f"```{des}```")
-        msg = await channel.send("@everyone Hi Travalers, are you coming today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed)
+        today_img = discord.File(await query_image(), filename="temp.png")
+        msg = await channel.send("@everyone Hi Travalers, are you coming today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
         Coop.message_id = msg.id
 
     async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
