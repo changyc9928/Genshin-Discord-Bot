@@ -37,7 +37,7 @@ class PaimonBot(commands.Bot):
         Coop.message_id = msg.id
 
     async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
-            hours=8))).replace(hour=19, minute=6, second=0, microsecond=0)):
+            hours=8))).replace(hour=19, minute=9, second=0, microsecond=0)):
         while True:  # Or change to self.is_running or some variable to control the task
             delta = self.seconds_until(time)
             if delta < 0:
