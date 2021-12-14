@@ -36,12 +36,12 @@ class PaimonBot(commands.Bot):
         msg = await channel.send("@everyone Hi Travalers, are you coming today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
         Coop.message_id = msg.id
 
-    async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
-            hours=8))).replace(hour=19, minute=30, second=0, microsecond=0)):
+    async def coop(self, gap=5, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
+            hours=8))).replace(hour=20, minute=10, second=0, microsecond=0)):
         while True:  # Or change to self.is_running or some variable to control the task
             delta = self.seconds_until(time)
-            if delta < 0:
-                return
+            while delta < 0:
+                delta += datetime.timedelta(minutes=gap)
             # Will stay here until your clock says 18:30
             await asyncio.sleep(delta)
 
@@ -55,7 +55,7 @@ class PaimonBot(commands.Bot):
         while True:
             delta = self.seconds_until(time)
             if delta < 0:
-                return
+                delta += datetime.timedelta(minutes=gap)
             await asyncio.sleep(delta)
             Coop.reset_data()
             time += datetime.timedelta(minutes=gap)
