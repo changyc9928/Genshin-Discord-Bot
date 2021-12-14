@@ -41,7 +41,7 @@ class PaimonBot(commands.Bot):
         while True:  # Or change to self.is_running or some variable to control the task
             delta = self.seconds_until(time)
             while delta < 0:
-                delta += datetime.timedelta(minutes=gap)
+                delta += gap*60
             # Will stay here until your clock says 18:30
             await asyncio.sleep(delta)
 
@@ -55,7 +55,7 @@ class PaimonBot(commands.Bot):
         while True:
             delta = self.seconds_until(time)
             if delta < 0:
-                delta += datetime.timedelta(minutes=gap)
+                delta += gap*60
             await asyncio.sleep(delta)
             Coop.reset_data()
             time += datetime.timedelta(minutes=gap)
