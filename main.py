@@ -28,6 +28,7 @@ class PaimonBot(commands.Bot):
 
     async def greet(self):
         channel = self.get_channel(915621292936396821)
+        await channel.send("Greetings!")
         Coop.load_json()
         des = Coop.convert_to_json()
         embed = discord.Embed(title="Coop JSON here",
@@ -37,8 +38,7 @@ class PaimonBot(commands.Bot):
         Coop.message_id = msg.id
 
     async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
-            hours=8))).replace(hour=19, minute=16, second=0, microsecond=0)):
-        await self.get_channel(915621292936396821).send("Greetings!")
+            hours=8))).replace(hour=19, minute=19, second=0, microsecond=0)):
         while True:  # Or change to self.is_running or some variable to control the task
             delta = self.seconds_until(time)
             if delta < 0:
