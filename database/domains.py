@@ -48,5 +48,5 @@ class Domains:
             "Talent Books": Domains.talent_domains,
             "Artifacts": Domains.artifact_domains,
             "Trounce Domains": Domains.trounce_domains,
-            "World Boss": Domains.world_bosses
+            "World Bosses": Domains.world_bosses
         }
