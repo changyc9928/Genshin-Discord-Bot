@@ -22,4 +22,4 @@ class DomainOptionView(discord.ui.View):
         self.add_item(DomainTypeButton("Talent Books"))
         self.add_item(DomainTypeButton("Artifacts"))
         self.add_item(DomainTypeButton("Trounce Domains"))
-        self.add_item(DomainTypeButton("World Boss"))
+        self.add_item(DomainTypeButton("World Bosses"))

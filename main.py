@@ -9,17 +9,19 @@ from database.coop import Coop
 from discord.ext import commands
 from dotenv.main import load_dotenv
 from view.attending_view import AttendingView
-from query_graphql import query_image
+from query_graphql import query_image, query_artifact_domains
+from database.domains import Domains
 
 
 class PaimonBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or("!"))
+        ServerData.load_json()
+        asyncio.run(Domains.initialize())
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
-        ServerData.load_json()
 
     def seconds_until(self, future_exec):
         now = datetime.datetime.now(

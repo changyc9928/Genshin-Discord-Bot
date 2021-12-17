@@ -1,5 +1,5 @@
 import discord
-from database.domains import domains
+from database.domains import Domains
 from database.coop import Coop
 
 
@@ -8,14 +8,14 @@ class DomainDropdown(discord.ui.Select):
         self.tag = label
         options = []
 
-        for name, material in domains[label].items():
+        for name, material in Domains.domains[label].items():
             options.append(discord.SelectOption(
                 label=name, description=material))
 
         super().__init__(
             placeholder="Choose the domain(s) you want to farm today...",
             min_values=0,
-            max_values=len(domains[label]),
+            max_values=len(Domains.domains[label]),
             options=options,
         )
 
