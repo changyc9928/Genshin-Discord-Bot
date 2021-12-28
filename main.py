@@ -16,8 +16,6 @@ from database.domains import Domains
 class PaimonBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or("!"))
-        ServerData.load_json()
-        asyncio.run(Domains.initialize())
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
@@ -29,6 +27,8 @@ class PaimonBot(commands.Bot):
         return (future_exec - now).total_seconds()
 
     async def greet(self):
+        ServerData.load_json()
+        await Domains.initialize()
         channel = self.get_channel(915621292936396821)
         Coop.load_json()
         des = Coop.convert_to_json()
