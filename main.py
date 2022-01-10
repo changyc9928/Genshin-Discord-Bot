@@ -63,7 +63,7 @@ class PaimonBot(commands.Bot):
             await asyncio.sleep(delta)
             Coop.reset_data()
             time += datetime.timedelta(minutes=gap)
-            await self.get_channel(915621292936396821).send("Coop data reset")
+            await self.get_channel(915621292936396821).send("Coop data reset.")
 
 
 bot = PaimonBot()
@@ -78,8 +78,8 @@ async def coop(ctx: commands.Context):
 
 @bot.command()
 async def reset(ctx: commands.Context):
-    await bot.reset_coop(gap=1, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
-        hours=8))) + datetime.timedelta(seconds=5))
+    Coop.reset_data()
+    await ctx.send("Manually reset coop data.")
 
 
 @bot.command()

@@ -34,12 +34,17 @@ class Coop:
     def add_user(user):
         if user.id not in Coop.data:
             Coop.data[user.id] = CoopData(user.name)
-            Coop.save_json()
+        else:
+            Coop.data[user.id].attend = True
+            Coop.data[user.id].time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(
+                hour=22, minute=30, second=0, microsecond=0).strftime('%Y-%m-%d %H:%M %Z')
+        Coop.save_json()
 
     @staticmethod
-    def delete_user(user):
+    def deregister_user(user):
         if user.id in Coop.data:
-            del Coop.data[user.id]
+            # del Coop.data[user.id]
+            Coop.data[user.id].reset()
             Coop.save_json()
 
     def save_json():
@@ -55,8 +60,19 @@ class Coop:
 class CoopData:
     def __init__(self, name) -> None:
         self.name = name
+        self.attend = True
         self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(
             hour=22, minute=30, second=0, microsecond=0).strftime('%Y-%m-%d %H:%M %Z')
+        self.weapon = []
+        self.leyline = []
+        self.talent = []
+        self.artifact = []
+        self.world_boss = []
+        self.trounce = []
+
+    def reset(self):
+        self.attend = False
+        self.time = None
         self.weapon = []
         self.leyline = []
         self.talent = []

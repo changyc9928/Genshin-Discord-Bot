@@ -19,10 +19,10 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             await interaction.response.send_message(f"Paimon wonder what kind of domains are you farming today from the list below 🤔", view=DomainOptionView(), ephemeral=True)
         elif self.label == "Skipping":
             # reset his coop data
-            Coop.delete_user(user)
+            Coop.deregister_user(user)
             # await interaction.response.send_message(f"{user} is not coming!")
         elif self.label == "Change time":
-            if user.id not in Coop.data:
+            if user.id not in Coop.data or Coop.data[user.id].attend == False:
                 await interaction.response.send_message(f"Hey {user.name}! You're not coming! Please tell Paimon that you're coming before changing your online time.")
                 return
 
