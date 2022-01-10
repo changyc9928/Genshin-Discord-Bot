@@ -41,7 +41,7 @@ class ServerData:
 
     @staticmethod
     def get_client(id):
-        print(id)
+        # print(id)
         if id not in ServerData.data:
             return
         return GenshinClient(ServerData.data[id].cookies)
@@ -73,7 +73,7 @@ class ServerData:
                 new_user.add_account(acc["uid"])
                 new_user.accounts[acc["uid"]].authkey = acc["authkey"]
             ServerData.data[int(user_id)] = new_user
-        print(json.dumps(ServerData.data, default=lambda o: o.__dict__, indent=4))
+        # print(json.dumps(ServerData.data, default=lambda o: o.__dict__, indent=4))
 
 
 class Member:

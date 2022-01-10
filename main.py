@@ -20,6 +20,7 @@ class PaimonBot(commands.Bot):
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
+        ServerData.load_json()
 
     def seconds_until(self, future_exec):
         now = datetime.datetime.now(
@@ -27,7 +28,6 @@ class PaimonBot(commands.Bot):
         return (future_exec - now).total_seconds()
 
     async def greet(self):
-        ServerData.load_json()
         await Domains.initialize()
         channel = self.get_channel(915621292936396821)
         Coop.load_json()

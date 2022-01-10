@@ -80,7 +80,7 @@ class CoopData:
         elif tag == "Trounce Domains":
             self.trounce = []
             data = self.trounce
-        elif tag == "World Boss":
+        elif tag == "World Bosses":
             self.world_boss = []
             data = self.world_boss
         ret = ""

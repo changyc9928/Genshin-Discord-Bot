@@ -27,8 +27,9 @@ class DomainDropdown(discord.ui.Select):
                                   description=f"```{Coop.convert_to_json()}```")
             await msg.edit(embed=embed)
             await interaction.response.send_message(ret, ephemeral=True)
-        except:
+        except Exception as e:
             await interaction.response.send_message("You're not coming today!", ephemeral=True)
+            print(e)
 
 
 class DomainDropdownView(discord.ui.View):
