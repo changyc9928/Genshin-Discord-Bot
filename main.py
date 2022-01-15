@@ -29,7 +29,7 @@ class PaimonBot(commands.Bot):
 
     async def greet(self):
         await Domains.initialize()
-        channel = self.get_channel(915621292936396821)
+        channel = self.get_channel(931888664357777468)
         Coop.load_json()
         des = Coop.convert_to_json()
         embed = discord.Embed(title="Coop JSON here",
