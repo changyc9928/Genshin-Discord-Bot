@@ -45,7 +45,10 @@ class Coop:
         if user.id in Coop.data:
             # del Coop.data[user.id]
             Coop.data[user.id].reset()
-            Coop.save_json()
+        else:
+            Coop.add_user(user)
+            Coop.data[user.id].reset()
+        Coop.save_json()
 
     def save_json():
         with open('data.json', 'w', encoding='utf-8') as f:
