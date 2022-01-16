@@ -14,6 +14,9 @@ from database.domains import Domains
 
 
 class PaimonBot(commands.Bot):
+
+    channel = 931888664357777468
+
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or("!"))
 
@@ -29,7 +32,7 @@ class PaimonBot(commands.Bot):
 
     async def greet(self):
         await Domains.initialize()
-        channel = self.get_channel(931888664357777468)
+        channel = self.get_channel(PaimonBot.channel)
         Coop.load_json()
         des = Coop.convert_to_json()
         embed = discord.Embed(title="Coop JSON here",
@@ -63,7 +66,7 @@ class PaimonBot(commands.Bot):
             await asyncio.sleep(delta)
             Coop.reset_data()
             time += datetime.timedelta(minutes=gap)
-            await self.get_channel(915621292936396821).send("Coop data reset.")
+            await self.get_channel(PaimonBot.channel).send("Coop data reset.")
 
 
 bot = PaimonBot()
