@@ -15,7 +15,7 @@ from database.domains import Domains
 
 class PaimonBot(commands.Bot):
 
-    channel = 915621292936396821
+    channel = 931888664357777468
 
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or("!"))
@@ -41,7 +41,7 @@ class PaimonBot(commands.Bot):
         msg = await channel.send("@everyone Hi Travalers, are you coming today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
         Coop.message_id = msg.id
 
-    async def coop(self, gap=0.5, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
+    async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
             hours=8))).replace(hour=18, minute=30, second=0, microsecond=0)):
         while True:  # Or change to self.is_running or some variable to control the task
             try:
