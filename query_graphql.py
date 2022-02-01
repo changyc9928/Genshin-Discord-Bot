@@ -55,7 +55,13 @@ async def query_artifact_domains():
     )
 
     # Execute the query on the transport
-    result = await client.execute_async(query)
+    flag = True
+    while flag:
+        try:
+            result = await client.execute_async(query)
+            flag = False
+        except:
+            pass
     ret = {}
     for domain in result["getAllDomainCategory"]:
         ret[domain["name"]] = "/".join(x.replace("_", " ").title() for x in domain["artifacts"])
@@ -88,7 +94,13 @@ async def query_weapon_materials_book():
     )
 
     # Execute the query on the transport
-    result = await client.execute_async(query)
+    flag = True
+    while flag:
+        try:
+            result = await client.execute_async(query)
+            flag = False
+        except:
+            pass
     weapon = {}
     book = {}
     result = result["getDaily"]['materials']

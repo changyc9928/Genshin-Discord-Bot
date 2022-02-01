@@ -44,35 +44,29 @@ class PaimonBot(commands.Bot):
     async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
             hours=8))).replace(hour=18, minute=30, second=0, microsecond=0)):
         while True:  # Or change to self.is_running or some variable to control the task
-            try:
-                delta = self.seconds_until(time)
-                while delta < 0:
-                    time += datetime.timedelta(minutes=gap)
-                    delta = self.seconds_until(time)
-                # Will stay here until your clock says 18:30
-                await asyncio.sleep(delta)
-
-                await self.greet()
-
-                # print(f"{datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))}")
+            delta = self.seconds_until(time)
+            while delta < 0:
                 time += datetime.timedelta(minutes=gap)
-            except:
-                pass
+                delta = self.seconds_until(time)
+            # Will stay here until your clock says 18:30
+            await asyncio.sleep(delta)
+
+            await self.greet()
+
+            # print(f"{datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))}")
+            time += datetime.timedelta(minutes=gap)
 
     async def reset_coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
             hours=8))).replace(hour=4, minute=0, second=0, microsecond=0)):
         while True:
-            try:
-                delta = self.seconds_until(time)
-                if delta < 0:
-                    time += datetime.timedelta(minutes=gap)
-                    delta = self.seconds_until(time)
-                await asyncio.sleep(delta)
-                Coop.reset_data()
+            delta = self.seconds_until(time)
+            if delta < 0:
                 time += datetime.timedelta(minutes=gap)
-                await self.get_channel(PaimonBot.channel).send("Coop data reset.")
-            except:
-                pass
+                delta = self.seconds_until(time)
+            await asyncio.sleep(delta)
+            Coop.reset_data()
+            time += datetime.timedelta(minutes=gap)
+            await self.get_channel(PaimonBot.channel).send("Coop data reset.")
 
 
 bot = PaimonBot()
