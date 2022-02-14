@@ -1,6 +1,7 @@
 import discord
 from database.domains import Domains
 from database.coop import Coop
+from utils.embed_formatter import EmbedFormatter
 
 
 class DomainDropdown(discord.ui.Select):
@@ -23,8 +24,9 @@ class DomainDropdown(discord.ui.Select):
         try:
             ret = Coop.data[interaction.user.id].book(self.tag, self.values)
             msg = await interaction.channel.fetch_message(Coop.message_id)
-            embed = discord.Embed(title="Coop JSON here",
-                                  description=f"```{Coop.convert_to_json()}```")
+            embed = discord.Embed(title="Today's Menu")
+            embedFormatter = EmbedFormatter(Coop.convert_to_obj(), embed)
+            embedFormatter.format_embed()
             await msg.edit(embed=embed)
             await interaction.response.send_message(ret, ephemeral=True)
         except Exception as e:

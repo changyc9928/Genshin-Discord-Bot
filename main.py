@@ -11,6 +11,7 @@ from dotenv.main import load_dotenv
 from view.attending_view import AttendingView
 from query_graphql import query_image, query_artifact_domains
 from database.domains import Domains
+from utils.embed_formatter import EmbedFormatter
 
 
 class PaimonBot(commands.Bot):
@@ -35,10 +36,12 @@ class PaimonBot(commands.Bot):
         channel = self.get_channel(PaimonBot.channel)
         Coop.load_json()
         des = Coop.convert_to_json()
-        embed = discord.Embed(title="Coop JSON here",
-                              description=f"```{des}```")
+        embed = discord.Embed(title="Today's Menu")
+        coop_json = Coop.convert_to_obj()
+        embedFormatter = EmbedFormatter(coop_json, embed)
+        embedFormatter.format_embed()
         today_img = discord.File(await query_image(), filename="temp.png")
-        msg = await channel.send("@everyone Hi Travalers, are you coming today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
+        msg = await channel.send("@everyone Hi Travelers, are you ikuyo today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
         Coop.message_id = msg.id
 
     async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
@@ -91,34 +94,34 @@ async def register(ctx: commands.Context):
     if ret:
         await ctx.send("Paimon has successfully registered you to the server database!")
     else:
-        await ctx.send("Paimon can't register you for some reasons...")
+        await ctx.send("Painmon can't register you for some reasons...")
 
 
 @bot.command()
 async def setCookies(ctx: commands.Context, ltoken: str, ltuid: int):
     ret = ServerData.set_cookies(ctx.author.id, ltoken, ltuid)
     if not ret:
-        await ctx.send("Paimon can't register your cookies for some reasons...")
+        await ctx.send("Painmon can't register your cookies for some reasons...")
     else:
-        await ctx.send("Paimon has successfully registered your cookies!")
+        await ctx.send("Painmon has successfully registered your cookies!")
 
 
 @bot.command()
 async def setAuthkey(ctx: commands.Context, uid: int, url: str):
     ret = ServerData.set_authkey(ctx.author.id, uid, url)
     if not ret:
-        await ctx.send("Paimon can't register your authkey for some reasons...")
+        await ctx.send("Painmon can't register your authkey for some reasons...")
     else:
-        await ctx.send("Paimon has successfully registered your authkey!")
+        await ctx.send("Painmon has successfully registered your authkey!")
 
 
 @bot.command()
 async def registerAccount(ctx: commands.Context, uid: int):
     ret = ServerData.register_account(ctx.author.id, uid)
     if not ret:
-        await ctx.send("Paimon can't register your Genshin account for some reasons...")
+        await ctx.send("Painmon can't register your Genshin account for some reasons...")
     else:
-        await ctx.send("Paimon has successfully registered your Genshin account!")
+        await ctx.send("Painmon has successfully registered your Genshin account!")
 
 
 @bot.command()
@@ -167,11 +170,11 @@ async def primo(ctx: commands.Context, uid: int):
     #            "ltoken": "PUvLWxC9lWijYCyi8ewhsxj3riKLc763kB85JPuH"}
     client = ServerData.get_client(ctx.author.id)
     if client is None:
-        await ctx.send("Paimon couldn't get your authkey T T")
+        await ctx.send("Painmon couldn't get your authkey T T")
         return
     client.authkey = ServerData.get_authkey(ctx.author.id, uid)
     if client.authkey is None:
-        await ctx.send("Paimon couldn't get your authkey T T")
+        await ctx.send("Painmon couldn't get your authkey T T")
         await client.close()
         return
     freq = {}
@@ -193,7 +196,7 @@ async def primo(ctx: commands.Context, uid: int):
                     freq[key][trans.reason] = 0
                 freq[key][trans.reason] += trans.amount
     except:
-        await ctx.send("Paimon can't get your primogem transactions for some reasons...")
+        await ctx.send("Painmon can't get your primogem transactions for some reasons...")
 
     for key, value in freq.items():
         ret = ""
@@ -236,10 +239,10 @@ async def wishHistory(ctx: commands.Context, uid: int):
 
     client = ServerData.get_client(ctx.author.id)
     if client is None:
-        await ctx.send("Paimon couldn't get your authkey T T")
+        await ctx.send("Painmon couldn't get your authkey T T")
         return
     client.authkey = ServerData.get_authkey(ctx.author.id, uid)
-    await ctx.send("OK, please give me a moment...")
+    await ctx.send("Give Painmon a sec plz...")
     ret = []
     async for wish in client.wish_history(banner, limit=limit):
         if wish.rarity == 5:

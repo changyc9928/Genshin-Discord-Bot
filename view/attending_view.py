@@ -3,6 +3,7 @@ import re
 
 from view.domain_type_view import DomainOptionView
 from database.coop import Coop
+from utils.embed_formatter import EmbedFormatter
 
 
 class AttendingButton(discord.ui.Button["AttendingView"]):
@@ -36,8 +37,9 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             await ask.delete_original_message()
             await response.delete()
             await confirm.delete(delay=2)
-        embed = discord.Embed(title="Coop JSON here",
-                              description=f"```{Coop.convert_to_json()}```")
+        embed = discord.Embed(title="Today's Menu")
+        embedFormatter = EmbedFormatter(Coop.convert_to_obj(), embed)
+        embedFormatter.format_embed()
         await msg.edit(embed=embed)
 
 
