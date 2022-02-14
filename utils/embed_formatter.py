@@ -6,7 +6,7 @@ class EmbedFormatter():
         self.embed = embed
 
     def format_attendance(self):
-        return "".join([f"➡️ {self.data[key]['name']}\n" for key in self.data.keys()])
+        return "".join([f"➡️ {self.data[key]['name']} at {self.data[key]['time']}\n" for key in self.data.keys()])
     
     def format_materials(self):
         ret = ""

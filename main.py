@@ -41,7 +41,7 @@ class PaimonBot(commands.Bot):
         embedFormatter = EmbedFormatter(coop_json, embed)
         embedFormatter.format_embed()
         today_img = discord.File(await query_image(), filename="temp.png")
-        msg = await channel.send("@everyone Hi Travelers, are you ikuyo today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
+        msg = await channel.send("@everyone Minna, are you ikuyo today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
         Coop.message_id = msg.id
 
     async def coop(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(

@@ -22,7 +22,7 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             # reset his coop data
             Coop.deregister_user(user)
             # await interaction.response.send_message(f"{user} is not coming!")
-        elif self.label == "Change time":
+        elif self.label == "Set time":
             if user.id not in Coop.data or Coop.data[user.id].attend == False:
                 await interaction.response.send_message(f"Hey {user.name}! You're not coming! Please tell Paimon that you're coming before changing your online time.")
                 return
@@ -51,4 +51,4 @@ class AttendingView(discord.ui.View):
         self.add_item(AttendingButton(
             "Skipping", discord.ButtonStyle.danger, bot))
         self.add_item(AttendingButton(
-            "Change time", discord.ButtonStyle.secondary, bot))
+            "Set time", discord.ButtonStyle.secondary, bot))
