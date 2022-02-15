@@ -1,4 +1,5 @@
 from datetime import datetime
+from dateutil import parser
 
 class EmbedFormatter():
     def __init__(self, data, embed):
@@ -6,7 +7,7 @@ class EmbedFormatter():
         self.embed = embed
 
     def format_attendance(self):
-        return "".join([f"➡️ {self.data[key]['name']} at {self.data[key]['time']}\n" for key in self.data.keys()])
+        return "".join([f"➡️ {self.data[key]['name']} at {parser.parse(self.data[key]['time']).strftime('%I:%M %p')}\n" if self.data[key]['attend'] == True else "" for key in self.data.keys()])
     
     def format_materials(self):
         ret = ""
@@ -28,7 +29,7 @@ class EmbedFormatter():
                 if len(member['trounce']) > 0:
                     materials += self.format_materials_field("🐸 Trounce", member['trounce'])
                 if len(materials) == 0:
-                    ret += "Haven't ordered anything yet 🤷"
+                    ret += "> 🤷 Haven't ordered anything yet"
                 else:
                     ret += materials
                 ret += "\n"
