@@ -106,9 +106,17 @@ async def query_weapon_materials_book():
     result = result["getDaily"]['materials']
     for material in result:
         if material["type"] == "book":
-            book[material["domain"]] = material["name"]
+            if material["domain"] not in book:
+                book[material["domain"]] = []
+            book[material["domain"]].append(material["name"])
         elif material["type"] == "weapon":
-            weapon[material["domain"]] = material["name"]
+            if material["domain"] not in weapon:
+                weapon[material["domain"]] = []
+            weapon[material["domain"]].append(material["name"])
+    for key, item in book.items():
+        book[key] = "/".join(item)
+    for key, item in weapon.items():
+        weapon[key] = "/".join(item)
     return weapon, book
 
 
