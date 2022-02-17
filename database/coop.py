@@ -12,6 +12,15 @@ class Coop:
     def convert_to_json():
         return json.dumps(Coop.data, default=lambda o: o.__dict__, indent=4)
 
+    # Function that converts the json to a dictionary
+    @staticmethod
+    def convert_to_obj():
+        if not os.path.isfile("data.json"):
+            return
+        with open("data.json", "r") as file:
+            data = json.loads(file.read())
+            return data
+
     @staticmethod
     def load_json():
         if not os.path.isfile("data.json"):

@@ -3,6 +3,7 @@ import re
 
 from view.domain_type_view import DomainOptionView
 from database.coop import Coop
+from utils.embed_formatter import EmbedFormatter
 
 
 class AttendingButton(discord.ui.Button["AttendingView"]):
@@ -21,7 +22,7 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             # reset his coop data
             Coop.deregister_user(user)
             # await interaction.response.send_message(f"{user} is not coming!")
-        elif self.label == "Change time":
+        elif self.label == "Set time":
             if user.id not in Coop.data or Coop.data[user.id].attend == False:
                 await interaction.response.send_message(f"Hey {user.name}! You're not coming! Please tell Paimon that you're coming before changing your online time.")
                 return
@@ -36,8 +37,9 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             await ask.delete_original_message()
             await response.delete()
             await confirm.delete(delay=2)
-        embed = discord.Embed(title="Coop JSON here",
-                              description=f"```{Coop.convert_to_json()}```")
+        embed = discord.Embed(title="Today's Menu")
+        embedFormatter = EmbedFormatter(Coop.convert_to_obj(), embed)
+        embedFormatter.format_embed()
         await msg.edit(embed=embed)
 
 
@@ -49,4 +51,4 @@ class AttendingView(discord.ui.View):
         self.add_item(AttendingButton(
             "Skipping", discord.ButtonStyle.danger, bot))
         self.add_item(AttendingButton(
-            "Change time", discord.ButtonStyle.secondary, bot))
+            "Set time", discord.ButtonStyle.secondary, bot))
