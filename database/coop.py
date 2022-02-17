@@ -43,7 +43,7 @@ class Coop:
     def add_user(user):
         if user.id not in Coop.data:
             Coop.data[user.id] = CoopData(user.name)
-        else:
+        elif Coop.data[user.id].attend == False:
             Coop.data[user.id].attend = True
             Coop.data[user.id].time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(
                 hour=22, minute=30, second=0, microsecond=0).strftime('%Y-%m-%d %H:%M %Z')
