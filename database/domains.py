@@ -15,7 +15,8 @@ class Domains:
         "Wolf of the North Challenge": "Andrius (Lupus Boreas), Dominator of Wolves",
         "Beneath the Dragon-Queller": "Azhdaha, Sealed Lord of Vishaps",
         "Enter the Golden House": "Childe, Eleventh of the Fatui Harbingers",
-        "Narukami Island: Tenshukaku": "La Signora (Rosalyne-Kruzchka Lohefalter), The Fair Lady"
+        "Narukami Island: Tenshukaku": "La Signora (Rosalyne-Kruzchka Lohefalter), The Fair Lady",
+        "End of the Oneiric Euthymia": "Magatsu Mitake Narukami no Mikoto, Raiden no Inazuma Tono"
     }
     world_bosses = {
         "Anemo Hypostasis": None,
@@ -31,7 +32,8 @@ class Domains:
         "Perpetual Mechanical Array": None,
         "Hydro Hypostasis": None,
         "Thunder Manifestation": None,
-        "Golden Wolflord": None
+        "Golden Wolflord": None,
+        "Bathysmal Vishap Herd": None
     }
 
 
