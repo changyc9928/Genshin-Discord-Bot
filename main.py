@@ -32,8 +32,11 @@ class PaimonBot(commands.Bot):
         return (future_exec - now).total_seconds()
 
     async def greet(self):
-        await Domains.initialize()
         channel = self.get_channel(PaimonBot.channel)
+        with open('images/painmon.gif', 'rb') as f:
+            painmonImg = discord.File(f)
+            painmonMsg = await channel.send("**Wait while Painmon gets da menu...**", file=painmonImg)
+        await Domains.initialize()
         Coop.load_json()
         des = Coop.convert_to_json()
         embed = discord.Embed(title="Today's Menu")
@@ -41,6 +44,7 @@ class PaimonBot(commands.Bot):
         embedFormatter = EmbedFormatter(coop_json, embed)
         embedFormatter.format_embed()
         today_img = discord.File(await query_image(), filename="temp.png")
+        await painmonMsg.delete()
         msg = await channel.send("@everyone Minna, are you ikuyo today?\n -- Pressing skipping button will clear all your data.\n -- Click on change time button to delay or move forward your online time (default: 10.30 pm).", view=AttendingView(bot), embed=embed, file=today_img)
         Coop.message_id = msg.id
 
