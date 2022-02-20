@@ -12,7 +12,11 @@ To run the bot locally, simply install the latest requirements using `pip` by:
 ```
 pip install -r requirements.txt
 ```
-and then run the bot by:
+and also set up the discord token environment variable by:
+```
+export TOKEN=${discord token here}
+```
+and then finally run the bot by:
 ```
 python main.py
 ```
