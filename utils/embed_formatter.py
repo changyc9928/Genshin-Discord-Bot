@@ -7,10 +7,14 @@ class EmbedFormatter():
         self.embed = embed
 
     def format_attendance(self):
+        if len(self.data) == 0:
+            return "> 🤷 Haven't recorded attendance yet"
         return "".join([f"✅ {self.data[key]['name']} at {parser.parse(self.data[key]['time']).strftime('%I:%M %p')}\n" if self.data[key]['attend'] == True else f"🚫 {self.data[key]['name']} no ikuyo today\n" for key in self.data.keys()])
     
     def format_materials(self):
         ret = ""
+        if len(self.data) == 0:
+            return "> 🤷 Haven't ordered anything yet"
         for key in self.data.keys():
             member = self.data[key]
             if member["attend"]:
@@ -33,6 +37,10 @@ class EmbedFormatter():
                 else:
                     ret += materials
                 ret += "\n"
+        
+        # discord doesn't allow empty strings or else 400 bad request error :/
+        if len(ret) == 0:
+            return "> 🤷 Haven't ordered anything yet"
         return ret
 
     def format_materials_field(self, title, materials):

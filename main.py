@@ -38,7 +38,7 @@ class PaimonBot(commands.Bot):
             painmonMsg = await channel.send("**Wait while Painmon gets da menu...**", file=painmonImg)
         await Domains.initialize()
         Coop.load_json()
-        des = Coop.convert_to_json()
+        # des = Coop.convert_to_json()
         embed = discord.Embed(title="Today's Menu")
         coop_json = Coop.convert_to_obj()
         embedFormatter = EmbedFormatter(coop_json, embed)
