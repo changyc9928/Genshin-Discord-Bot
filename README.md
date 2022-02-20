@@ -16,4 +16,4 @@ and then run the bot by:
 ```
 python main.py
 ```
-That is of course, you already have Python >= 3.7 and `pip` installed.
+That is of course, you already have Python >= 3.7 and `pip` installed. **Ensure that you have obtained our token first before using it.** If you do not have the token, simply leave an issue here and we'll get back to ya.
