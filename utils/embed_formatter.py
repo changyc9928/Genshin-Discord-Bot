@@ -9,7 +9,18 @@ class EmbedFormatter():
     def format_attendance(self):
         if len(self.data) == 0:
             return "> 🤷 Haven't recorded attendance yet"
-        return "".join([f"✅ {self.data[key]['name']} at {parser.parse(self.data[key]['time']).strftime('%I:%M %p')}\n" if self.data[key]['attend'] == True else f"🚫 {self.data[key]['name']} no ikuyo today\n" for key in self.data.keys()])
+        
+        ret = ""
+        for key in self.data.keys():
+            if self.data[key]['attend']:
+                ret += f"✅ {self.data[key]['name']}"
+                if self.data[key]['time']:
+                    ret += f" at {parser.parse(self.data[key]['time']).strftime('%I:%M %p')}\n"
+                else:
+                    ret += "\n"
+            else:
+                ret +=  f"🚫 {self.data[key]['name']} no ikuyo today\n"
+        return ret
     
     def format_materials(self):
         ret = ""
