@@ -25,7 +25,7 @@ class EmbedFormatter():
     def format_materials(self):
         ret = ""
         if len(self.data) == 0:
-            return "> 🤷 Haven't ordered anything yet"
+            return "> 🤷 Haven't ordered anything yet\n"
         for key in self.data.keys():
             member = self.data[key]
             if member["attend"]:
@@ -44,10 +44,10 @@ class EmbedFormatter():
                 if len(member['trounce']) > 0:
                     materials += self.format_materials_field("🐸 Trounce", member['trounce'])
                 if len(materials) == 0:
-                    ret += "> 🤷 Haven't ordered anything yet"
+                    ret += "> 🤷 Haven't ordered anything yet\n"
                 else:
                     ret += materials
-                ret += "\n"
+                # ret += "\n"
         
         # discord doesn't allow empty strings or else 400 bad request error :/
         if len(ret) == 0:
