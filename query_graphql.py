@@ -25,7 +25,12 @@ async def query_image():
     )
 
     # Execute the query on the transport
-    result = await client.execute_async(query)
+    flag = True
+    while flag:
+        try:
+            result = await client.execute_async(query)
+        except:
+            pass
     img = result["getDaily"]["image"]
 
     file = io.BytesIO(b64decode(img[9:]))
@@ -64,7 +69,8 @@ async def query_artifact_domains():
             pass
     ret = {}
     for domain in result["getAllDomainCategory"]:
-        ret[domain["name"]] = "/".join(x.replace("_", " ").title() for x in domain["artifacts"])
+        ret[domain["name"]] = "/".join(x.replace("_", " ").title()
+                                       for x in domain["artifacts"])
     return ret
 
 
