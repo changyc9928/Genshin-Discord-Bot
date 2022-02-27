@@ -16,7 +16,7 @@ from utils.embed_formatter import EmbedFormatter
 
 class PaimonBot(commands.Bot):
 
-    channel = 947507116330078208
+    channel = 915621292936396821
 
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or("!"))
