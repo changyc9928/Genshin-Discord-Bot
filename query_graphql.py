@@ -29,6 +29,7 @@ async def query_image():
     while flag:
         try:
             result = await client.execute_async(query)
+            flag = False
         except:
             pass
     img = result["getDaily"]["image"]
