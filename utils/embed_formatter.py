@@ -84,7 +84,7 @@ class EmbedFormatter():
                     valid_host.append(val["name"])
         i = random.randrange(0, len(valid_host))
         host = valid_host[i]
-        return f"{host} will be our host today online at {latest_time.strftime('%I:%M %p')}"
+        return f"👻 {host} will be our host today online at {latest_time.strftime('%I:%M %p')}"
 
     def format_embed(self):
         self.embed.set_thumbnail(
