@@ -82,12 +82,12 @@ bot.loop.create_task(bot.reset_coop())
 
 
 @bot.command()
-async def coop(ctx: commands.Context):
+async def coop_test(ctx: commands.Context):
     await bot.greet()
 
 
 @bot.command()
-async def reset(ctx: commands.Context):
+async def reset_test(ctx: commands.Context):
     Coop.reset_data()
     await ctx.send("Manually reset coop data.")
 
@@ -130,7 +130,7 @@ async def registerAccount(ctx: commands.Context, uid: int):
 
 @bot.command()
 async def primo(ctx: commands.Context, uid: int):
-    patch = [
+    patch_released_date = [
         datetime.datetime(2020, 9, 28, tzinfo=datetime.timezone(
             datetime.timedelta(hours=8))),
         datetime.datetime(2020, 11, 11, tzinfo=datetime.timezone(
@@ -155,8 +155,14 @@ async def primo(ctx: commands.Context, uid: int):
             datetime.timedelta(hours=8))),
         datetime.datetime(2022, 1, 5, tzinfo=datetime.timezone(
             datetime.timedelta(hours=8))),
+        datetime.datetime(2022, 2, 16, tzinfo=datetime.timezone(
+            datetime.timedelta(hours=8))),
+        datetime.datetime(2022, 3, 30, tzinfo=datetime.timezone(
+            datetime.timedelta(hours=8))),
+        datetime.datetime(2022, 5, 11, tzinfo=datetime.timezone(
+            datetime.timedelta(hours=8))),
     ]
-    patch_no = [
+    patch_ver = [
         "1.0",
         "1.1",
         "1.2",
@@ -168,7 +174,10 @@ async def primo(ctx: commands.Context, uid: int):
         "2.1",
         "2.2",
         "2.3",
-        "2.4"
+        "2.4",
+        "2.5",
+        "2.6",
+        "2.7"
     ]
     # cookies = {"ltuid": 131897908,
     #            "ltoken": "PUvLWxC9lWijYCyi8ewhsxj3riKLc763kB85JPuH"}
@@ -191,9 +200,9 @@ async def primo(ctx: commands.Context, uid: int):
                 writer.writerow([trans.time.strftime(
                     '%Y-%m-%d %H:%M %Z'), trans.reason, trans.amount])
                 key = ""
-                for i in range(1, len(patch)):
-                    if patch[i-1] <= trans.time < patch[i]:
-                        key = patch_no[i-1]
+                for i in range(1, len(patch_released_date)):
+                    if patch_released_date[i-1] <= trans.time < patch_released_date[i]:
+                        key = patch_ver[i-1]
                 if key not in freq:
                     freq[key] = {}
                 if trans.reason not in freq[key]:
