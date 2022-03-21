@@ -1,5 +1,4 @@
 from enum import Enum
-from eval import Literal
 
 class TokenType(Enum):
     EOF = 0
@@ -98,9 +97,3 @@ class Scanner():
 
     def end(self):
         return self.current >= len(self.source)
-
-
-if __name__ == "__main__":
-    command = "set 1,2 to 2 times and 3 to 1 times and 4 to 1 times and time to 2245"
-    scanner = Scanner(command)
-    tokens = scanner.scan()
