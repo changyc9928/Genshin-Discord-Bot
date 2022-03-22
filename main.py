@@ -1,3 +1,4 @@
+import re
 import discord
 import os
 import datetime
@@ -25,6 +26,7 @@ class PaimonBot(commands.Bot):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
         ServerData.load_json()
+        print(ServerData.data)
 
     def seconds_until(self, future_exec):
         now = datetime.datetime.now(
@@ -93,43 +95,119 @@ async def reset_test(ctx: commands.Context):
 
 
 @bot.command()
-async def register(ctx: commands.Context):
-    ret = ServerData.register(ctx.author.id, ctx.author.name)
-    if ret:
-        await ctx.send("Paimon has successfully registered you to the server database!")
-    else:
-        await ctx.send("Painmon can't register you for some reasons...")
+async def register_test(ctx: commands.Context):
+    await ctx.send(f"{ctx.author.mention}, what's your uid?")
 
+    def check_uid(m):
+        return re.match("[012568][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
 
-@bot.command()
-async def setCookies(ctx: commands.Context, ltoken: str, ltuid: int):
-    ret = ServerData.set_cookies(ctx.author.id, ltoken, ltuid)
+    uid = await bot.wait_for("message", check=check_uid)
+    ret = ServerData.register(uid.content)
     if not ret:
-        await ctx.send("Painmon can't register your cookies for some reasons...")
-    else:
-        await ctx.send("Painmon has successfully registered your cookies!")
+        await ctx.send("Your account has already registered...")
+        return
+
+    await setAuthkey_test(ctx, uid)
+
+    await setCookies_test(ctx, uid)
+
+    await ctx.send(f"{ctx.author.mention}, Painmon has successfully registered your Genshin account.")
 
 
 @bot.command()
-async def setAuthkey(ctx: commands.Context, uid: int, url: str):
-    ret = ServerData.set_authkey(ctx.author.id, uid, url)
+async def deleteAcc_test(ctx: commands.Context):
+    await ctx.send(f"{ctx.author.mention}, what's your uid?")
+
+    def check_uid(m):
+        return re.match("[012568][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
+
+    uid = await bot.wait_for("message", check=check_uid)
+    ret = ServerData.delete(uid.content)
     if not ret:
-        await ctx.send("Painmon can't register your authkey for some reasons...")
-    else:
-        await ctx.send("Painmon has successfully registered your authkey!")
+        await ctx.send("Painmon can't delete your account for some reasons...")
+        return
 
+    await ctx.send(f"{ctx.author.mention}, Painmon has successfully deleted your Genshin account.")
 
+    
 @bot.command()
-async def registerAccount(ctx: commands.Context, uid: int):
-    ret = ServerData.register_account(ctx.author.id, uid)
+async def setCookies_test(ctx: commands.Context, uid=None):
+    if uid is None:
+        await ctx.send(f"{ctx.author.mention}, what's your uid?")
+
+        def check_uid(m):
+            return re.match("[012568][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
+
+        uid = await bot.wait_for("message", check=check_uid)
+
+    await ctx.send(f"{ctx.author.mention}, please enter your ltuid, it will be expired in 24 hours. Follow the steps below:")
+    await ctx.send(f"go to hoyolab.com\n"
+                   "login to your account\n"
+                   "press F12 to open inspect mode (aka Developer Tools)\n"
+                   "go to Application, Cookies, https://www.hoyolab.com.\n"
+                   "copy ltuid and ltoken")
+    
+    def check_ltuid(m):
+        return re.match("[0-9]*", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
+
+    ltuid = await bot.wait_for("message", check=check_ltuid)
+
+    await ctx.send(f"{ctx.author.mention}, please enter your ltoken, follow the above steps.")
+
+    def check_ltoken(m):
+        return re.match(".*", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
+
+    ltoken = await bot.wait_for("message", check=check_ltoken)
+
+    ret = ServerData.set_cookies(uid.content, ltoken.content, ltuid.content)
     if not ret:
-        await ctx.send("Painmon can't register your Genshin account for some reasons...")
-    else:
-        await ctx.send("Painmon has successfully registered your Genshin account!")
+        await ctx.send("Can't save your cookies for some reasons...")
+
+    await ctx.send(f"{ctx.author.mention}, Painmon has successfully set your cookies.")
 
 
 @bot.command()
-async def primo(ctx: commands.Context, uid: int):
+async def setAuthkey_test(ctx: commands.Context, uid=None):
+    if uid is None:
+        await ctx.send(f"{ctx.author.mention}, what's your uid?")
+
+        def check_uid(m):
+            return re.match("[012568][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
+
+        uid = await bot.wait_for("message", check=check_uid)
+    await ctx.send(f"{ctx.author.mention}, please enter your authkey, it will be expired in 24 hours. Follow the steps below:")
+    await ctx.send(f"Open Genshin Impact in this PC (If you use multiple accounts, please restart the game)\n"
+                   "Then open the wish history in the game and wait it to load\n"
+                   "Press START on your keyboard, then search for Powershell\n"
+                   "Click Windows Powershell, then copy & paste the script below to the Powershell\n"
+                   "```iex ((New-Object System.Net.WebClient).DownloadString('https://gist.githubusercontent.com/MadeBaruna/1d75c1d37d19eca71591ec8a31178235/raw/41853f2b76dcb845cf8cb0c44174fb63459920f4/getlink_global.ps1'))```\n"
+                   "You can review the script here: https://gist.github.com/MadeBaruna/1d75c1d37d19eca71591ec8a31178235\n"
+                   "Press ENTER, and a link will copied to your clipboard\n"
+                   "Paste the text here")
+
+    def check_authkey(m):
+        return re.match("https://webstatic.*", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
+
+    authkey = await bot.wait_for("message", check=check_authkey)
+    ret = ServerData.set_authkey(uid.content, authkey.content)
+
+    if not ret:
+        await ctx.send("Can't save your authkey for some reasons...")
+        return
+
+    await ctx.send(f"{ctx.author.mention}, Painmon has successfully set your authkey.")
+
+# @bot.command()
+# async def registerAccount(ctx: commands.Context, uid: int):
+#     ret = ServerData.register_account(ctx.author.id, uid)
+#     if not ret:
+#         await ctx.send("Painmon can't register your Genshin account for some reasons...")
+#     else:
+#         await ctx.send("Painmon has successfully registered your Genshin account!")
+
+
+@bot.command()
+async def primo_test(ctx: commands.Context, uid: str):
     patch_released_date = [
         datetime.datetime(2020, 9, 28, tzinfo=datetime.timezone(
             datetime.timedelta(hours=8))),
@@ -181,14 +259,10 @@ async def primo(ctx: commands.Context, uid: int):
     ]
     # cookies = {"ltuid": 131897908,
     #            "ltoken": "PUvLWxC9lWijYCyi8ewhsxj3riKLc763kB85JPuH"}
-    client = ServerData.get_client(ctx.author.id)
-    if client is None:
-        await ctx.send("Painmon couldn't get your authkey T T")
-        return
-    client.authkey = ServerData.get_authkey(ctx.author.id, uid)
-    if client.authkey is None:
-        await ctx.send("Painmon couldn't get your authkey T T")
-        await client.close()
+    try:
+        client = ServerData.get_client(uid)
+    except Exception as err:
+        await ctx.send(f"Painmon couldn't get your connect to your account client API T_T\n{err}")
         return
     freq = {}
     # kind='primogem' id=1628258400000123727 uid=828918158 time=datetime.datetime(2021, 8, 6, 22, 3, 6, tzinfo=datetime.timezone.utc) amount=10 reason_id=1049 reason='Achievement reward'
@@ -208,8 +282,8 @@ async def primo(ctx: commands.Context, uid: int):
                 if trans.reason not in freq[key]:
                     freq[key][trans.reason] = 0
                 freq[key][trans.reason] += trans.amount
-    except:
-        await ctx.send("Painmon can't get your primogem transactions for some reasons...")
+    except Exception as err:
+        await ctx.send(f"Painmon can't get your primogem transactions for some reasons...\n{err}")
 
     for key, value in freq.items():
         ret = ""
@@ -227,7 +301,7 @@ async def primo(ctx: commands.Context, uid: int):
 
 
 @bot.command()
-async def wishHistory(ctx: commands.Context, uid: int):
+async def wishHistory_test(ctx: commands.Context, uid: str):
     await ctx.send("Key in the banner id(s) you want to query:\nNovice Wishes: 100\nPermanent Wish: 200\nCharacter Event Wish: 301\nWeapon Event Wish: 302")
     banner = set()
 
@@ -250,11 +324,11 @@ async def wishHistory(ctx: commands.Context, uid: int):
     if limit == -1:
         limit = None
 
-    client = ServerData.get_client(ctx.author.id)
-    if client is None:
-        await ctx.send("Painmon couldn't get your authkey T T")
+    try:
+        client = ServerData.get_client(uid)
+    except Exception as err:
+        await ctx.send(f"Painmon couldn't get your connect to your account client API T_T\n{err}")
         return
-    client.authkey = ServerData.get_authkey(ctx.author.id, uid)
     await ctx.send("Give Painmon a sec plz...")
     ret = []
     async for wish in client.wish_history(banner, limit=limit):
