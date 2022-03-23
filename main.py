@@ -26,7 +26,7 @@ class PaimonBot(commands.Bot):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
         ServerData.load_json()
-        print(ServerData.data)
+        # print(ServerData.data)
 
     def seconds_until(self, future_exec):
         now = datetime.datetime.now(
@@ -77,10 +77,37 @@ class PaimonBot(commands.Bot):
             time += datetime.timedelta(minutes=gap)
             await self.get_channel(PaimonBot.channel).send("Coop data reset.")
 
+    async def claim_daily_scheduled(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
+            hours=8))).replace(hour=0, minute=30, second=0, microsecond=0)):
+        while True:
+            delta = self.seconds_until(time)
+            if delta < 0:
+                time += datetime.timedelta(minutes=gap)
+                delta = self.seconds_until(time)
+            await asyncio.sleep(delta)
+            self.claim_daily()
+            time += datetime.timedelta(minutes=gap)
+
+    async def claim_daily(self):
+        for uid, _ in ServerData.data.items():
+            try:
+                client = ServerData.get_client(uid)
+            except Exception as err:
+                await self.get_channel(PaimonBot.channel).send(f"Painmon couldn't get your connect to {uid}'s client API T_T\n{err}")
+                return
+            try:
+                reward = await client.claim_daily_reward()
+            except Exception as err:
+                await self.get_channel(PaimonBot.channel).send(f"Painmon couldn't claim {uid}'s daily rewards T_T\n{err}")
+            else:
+                await self.get_channel(PaimonBot.channel).send(f"Painmon has claimed {reward.amount}x {reward.name} for {uid}")
+            await client.close()
+
 
 bot = PaimonBot()
 bot.loop.create_task(bot.coop())
 bot.loop.create_task(bot.reset_coop())
+bot.loop.create_task(bot.claim_daily())
 
 
 @bot.command()
@@ -129,7 +156,7 @@ async def deleteAcc_test(ctx: commands.Context):
 
     await ctx.send(f"{ctx.author.mention}, Painmon has successfully deleted your Genshin account.")
 
-    
+
 @bot.command()
 async def setCookies_test(ctx: commands.Context, uid=None):
     if uid is None:
@@ -146,7 +173,7 @@ async def setCookies_test(ctx: commands.Context, uid=None):
                    "press F12 to open inspect mode (aka Developer Tools)\n"
                    "go to Application, Cookies, https://www.hoyolab.com.\n"
                    "copy ltuid and ltoken")
-    
+
     def check_ltuid(m):
         return re.match("[0-9]*", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
 
@@ -306,7 +333,7 @@ async def wishHistory_test(ctx: commands.Context, uid: str):
     banner = set()
 
     def check(m):
-        return m.content in ["100", "200", "301", "302", "end"] and m.channel == ctx.channel
+        return m.content in ["100", "200", "301", "302", "end"] and m.channel == ctx.channel and m.author == ctx.author
     response = await bot.wait_for("message", check=check)
     while response.content.lower() != "end":
         banner.add(int(response.content))
@@ -347,6 +374,11 @@ async def wishHistory_test(ctx: commands.Context, uid: str):
         await ctx.send("".join(ret[offset:min(offset+30, len(ret))]))
         offset += 30
     await client.close()
+
+
+@bot.command()
+async def claimDaily_test(ctx: commands.Context):
+    await bot.claim_daily()
 
 load_dotenv()
 bot.run(os.getenv('TOKEN'))

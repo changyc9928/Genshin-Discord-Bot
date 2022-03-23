@@ -42,7 +42,7 @@ class ServerData:
     @staticmethod
     def get_client(uid: str):
         # print(id)
-        print(ServerData.data[uid])
+        # print(ServerData.data[uid])
         if uid not in ServerData.data:
             return
         return GenshinClient(ServerData.data[uid].cookies, genshin.extract_authkey(ServerData.data[uid].authkey))
@@ -77,25 +77,25 @@ class ServerData:
         # print(json.dumps(ServerData.data, default=lambda o: o.__dict__, indent=4))
 
 
-class Member:
-    def __init__(self, name) -> None:
-        self.name = name
-        self.cookies = {"ltuid": 0,
-                        "ltoken": ""}
-        self.accounts = {}
+# class Member:
+#     def __init__(self, name) -> None:
+#         self.name = name
+#         self.cookies = {"ltuid": 0,
+#                         "ltoken": ""}
+#         self.accounts = {}
 
-    def add_account(self, uid):
-        self.accounts[uid] = Account(uid)
+#     def add_account(self, uid):
+#         self.accounts[uid] = Account(uid)
 
-    def set_cookies(self, ltoken, ltuid):
-        self.cookies["ltoken"] = ltoken
-        self.cookies["ltuid"] = ltuid
+#     def set_cookies(self, ltoken, ltuid):
+#         self.cookies["ltoken"] = ltoken
+#         self.cookies["ltuid"] = ltuid
 
-    def set_authkey(self, uid, url) -> bool:
-        if uid not in self.accounts:
-            return False
-        self.accounts[uid].set_authkey(genshin.extract_authkey(url))
-        return True
+#     def set_authkey(self, uid, url) -> bool:
+#         if uid not in self.accounts:
+#             return False
+#         self.accounts[uid].set_authkey(genshin.extract_authkey(url))
+#         return True
 
 
 class Account:
