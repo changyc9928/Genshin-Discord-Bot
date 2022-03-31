@@ -5,6 +5,8 @@ import datetime
 import asyncio
 import csv
 
+from matplotlib import image
+
 from database.members import ServerData
 from database.coop import Coop
 from discord.ext import commands
@@ -13,6 +15,9 @@ from view.attending_view import AttendingView
 from query_graphql import query_image, query_artifact_domains
 from database.domains import Domains
 from utils.embed_formatter import EmbedFormatter
+import matplotlib.pyplot as plt
+from utils.wish import Wish
+from PIL import Image
 
 
 class PaimonBot(commands.Bot):
@@ -26,7 +31,7 @@ class PaimonBot(commands.Bot):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print("------")
         ServerData.load_json()
-        print(ServerData.data)
+        # print(ServerData.data)
 
     def seconds_until(self, future_exec):
         now = datetime.datetime.now(
@@ -77,10 +82,37 @@ class PaimonBot(commands.Bot):
             time += datetime.timedelta(minutes=gap)
             await self.get_channel(PaimonBot.channel).send("Coop data reset.")
 
+    async def claim_daily_scheduled(self, gap=1440, time=datetime.datetime.now(datetime.timezone(datetime.timedelta(
+            hours=8))).replace(hour=0, minute=30, second=0, microsecond=0)):
+        while True:
+            delta = self.seconds_until(time)
+            if delta < 0:
+                time += datetime.timedelta(minutes=gap)
+                delta = self.seconds_until(time)
+            await asyncio.sleep(delta)
+            self.claim_daily()
+            time += datetime.timedelta(minutes=gap)
+
+    async def claim_daily(self):
+        for uid, _ in ServerData.data.items():
+            try:
+                client = ServerData.get_client(uid)
+            except Exception as err:
+                await self.get_channel(PaimonBot.channel).send(f"Painmon couldn't get your connect to {uid}'s client API T_T\n{err}")
+                return
+            try:
+                reward = await client.claim_daily_reward()
+            except Exception as err:
+                await self.get_channel(PaimonBot.channel).send(f"Painmon couldn't claim {uid}'s daily rewards T_T\n{err}")
+            else:
+                await self.get_channel(PaimonBot.channel).send(f"Painmon has claimed {reward.amount}x {reward.name} for {uid}")
+            await client.close()
+
 
 bot = PaimonBot()
 bot.loop.create_task(bot.coop())
 bot.loop.create_task(bot.reset_coop())
+bot.loop.create_task(bot.claim_daily())
 
 
 @bot.command()
@@ -129,7 +161,7 @@ async def deleteAcc_test(ctx: commands.Context):
 
     await ctx.send(f"{ctx.author.mention}, Painmon has successfully deleted your Genshin account.")
 
-    
+
 @bot.command()
 async def setCookies_test(ctx: commands.Context, uid=None):
     if uid is None:
@@ -146,7 +178,7 @@ async def setCookies_test(ctx: commands.Context, uid=None):
                    "press F12 to open inspect mode (aka Developer Tools)\n"
                    "go to Application, Cookies, https://www.hoyolab.com.\n"
                    "copy ltuid and ltoken")
-    
+
     def check_ltuid(m):
         return re.match("[0-9]*", m.content) is not None and m.channel == ctx.channel and m.author == ctx.author
 
@@ -302,51 +334,67 @@ async def primo_test(ctx: commands.Context, uid: str):
 
 @bot.command()
 async def wishHistory_test(ctx: commands.Context, uid: str):
-    await ctx.send("Key in the banner id(s) you want to query:\nNovice Wishes: 100\nPermanent Wish: 200\nCharacter Event Wish: 301\nWeapon Event Wish: 302")
-    banner = set()
-
-    def check(m):
-        return m.content in ["100", "200", "301", "302", "end"] and m.channel == ctx.channel
-    response = await bot.wait_for("message", check=check)
-    while response.content.lower() != "end":
-        banner.add(int(response.content))
-        response = await bot.wait_for("message", check=check)
-    banner = list(banner)
-
-    def check_limit(m):
-        try:
-            return int(m.content) > 1 or int(m.content) == -1
-        except:
-            return False
-    await ctx.send("Any limit to recent n wishes? Type -1 if no otherwise please provide a number (at least 1)")
-    response = await bot.wait_for("message", check=check_limit)
-    limit = int(response.content)
-    if limit == -1:
-        limit = None
-
     try:
         client = ServerData.get_client(uid)
+        if client == None:
+            await ctx.send(f"This account hasn't been registered yet T_T")
+            return
     except Exception as err:
         await ctx.send(f"Painmon couldn't get your connect to your account client API T_T\n{err}")
         return
     await ctx.send("Give Painmon a sec plz...")
-    ret = []
-    async for wish in client.wish_history(banner, limit=limit):
-        if wish.rarity == 5:
-            ret.append(
-                f"{wish.time} - ***{wish.name} ({wish.rarity}* {wish.type})***\n")
-        elif wish.rarity == 4:
-            ret.append(
-                f"{wish.time} - **{wish.name} ({wish.rarity}* {wish.type})**\n")
-        else:
-            ret.append(
-                f"{wish.time} - {wish.name} ({wish.rarity}* {wish.type})\n")
-        await asyncio.sleep(0.5)
-    offset = 0
-    while offset < len(ret):
-        await ctx.send("".join(ret[offset:min(offset+30, len(ret))]))
-        offset += 30
+    banner_name = {100: "Beginner Banner", 200: "Standard Banner", 301: "Character Banner", 302: "Weapon Banner"}
+    wishes = {}
+    try:
+        for banner in [100, 200, 301, 302]:
+            wishes[banner] = []
+            # with open(f'{ctx.author.name}\'s wish history.csv', 'w', newline='') as file:
+            #     writer = csv.writer(file)
+            #     writer.writerow(["Time", "Name", "Rarity", "Type"])
+            async for wish in client.wish_history(banner):
+                # writer.writerow([wish.time, wish.name, wish.rarity, wish.type])
+                wishes[banner].append(Wish(wish.name, wish.type, wish.rarity, 0))
+                await asyncio.sleep(0.01)
+    except Exception as err:
+        await ctx.send(f"Painmon couldn't retreive your wish history...\n{err}")
+
+    for banner, wish in wishes.items():
+        wishes[banner].reverse()
+        pity = 0
+        for i in range(len(wishes[banner])):
+            pity += 1
+            wishes[banner][i].pity = pity
+            if wishes[banner][i].rarity == 5:
+                pity = 0
+    
+    msg = ""
+    i = 0
+    fig, axs = plt.subplots(2, 2)
+    for banner, wish in wishes.items():
+        msg = f"__{banner_name[banner]}__\n"
+        msg += "\n".join(list(map(lambda x: str(x), list(filter(lambda x: x.rarity == 4 or x.rarity == 5, wish)))))
+        msg += "\n\n" + f"You are currently {wish[-1].pity if len(wish) > 0 else 0} under pity."
+        await ctx.send(msg)
+        count = [0, 0, 0]
+        count[0] = len(list(filter(lambda x: x.rarity == 3, wish)))
+        count[1] = len(list(filter(lambda x: x.rarity == 4, wish)))
+        count[2] = len(list(filter(lambda x: x.rarity == 5, wish)))
+        x = i // 2
+        y = i % 2
+        axs[x, y].pie(count, labels=["3*", "4*", "5*"], explode=[0, 0, 0.2])
+        axs[x, y].set_title(banner_name[banner])
+        i += 1
+    fig.savefig("wish.png")
+    wishPie = discord.File("wish.png")
+    await ctx.send(file=wishPie)
+    os.remove("wish.png")
     await client.close()
+
+
+@bot.command()
+async def claimDaily_test(ctx: commands.Context):
+    await bot.claim_daily()
 
 load_dotenv()
 bot.run(os.getenv('TOKEN'))
+
