@@ -82,9 +82,11 @@ class EmbedFormatter():
             if val["time"]:
                 if parser.parse(val["time"]) == earliest_time:
                     valid_host.append(val["name"])
-        i = random.randrange(0, len(valid_host))
-        host = valid_host[i]
-        return f"👻 {host} will be our host today online at {latest_time.strftime('%I:%M %p')}"
+        if len(valid_host) > 0:
+            i = random.randrange(0, len(valid_host))
+            host = valid_host[i]
+            return f"👻 {host} will be our host today online at {latest_time.strftime('%I:%M %p')}"
+        return f"👻 Nobody is online today"
 
     def format_embed(self):
         self.embed.set_thumbnail(
