@@ -29,6 +29,7 @@ class Coop:
             data_ = json.loads(file.read())
         for user_id, data in data_.items():
             new_user = CoopData(data["name"])
+            new_user.attend = data["attend"]
             new_user.time = data["time"]
             new_user.weapon = data["weapon"]
             new_user.leyline = data["leyline"]
