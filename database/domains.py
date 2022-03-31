@@ -33,7 +33,8 @@ class Domains:
         "Hydro Hypostasis": None,
         "Thunder Manifestation": None,
         "Golden Wolflord": None,
-        "Bathysmal Vishap Herd": None
+        "Bathysmal Vishap Herd": None,
+        "Ruin Serpent": None,
     }
 
 
