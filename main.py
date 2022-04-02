@@ -17,7 +17,7 @@ from utils.commands import Evaluator, Parser, Scanner
 
 class PaimonBot(commands.Bot):
 
-    channel = 931888664357777468
+    channel = 947507116330078208
 
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or("!"))
