@@ -5,6 +5,7 @@ class EmbedFormatter():
     def __init__(self, data, embed):
         self.data = data
         self.embed = embed
+        self.count = 0
 
     def format_attendance(self):
         if len(self.data) == 0:
@@ -26,6 +27,7 @@ class EmbedFormatter():
         ret = ""
         if len(self.data) == 0:
             return "> 🤷 Haven't ordered anything yet\n"
+        order = 0
         for key in self.data.keys():
             member = self.data[key]
             if member["attend"]:
@@ -45,17 +47,26 @@ class EmbedFormatter():
                     materials += self.format_materials_field("🐸 Trounce", member['trounce'])
                 if len(materials) == 0:
                     ret += "> 🤷 Haven't ordered anything yet\n"
+                    continue
                 else:
+                    # materials = f"> {chr(order + 97)} - {materials}"
                     ret += materials
-                # ret += "\n"
+                    self.count = 0
+
         
         # discord doesn't allow empty strings or else 400 bad request error :/
         if len(ret) == 0:
             return "> 🤷 Haven't ordered anything yet"
+        print(ret)
         return ret
 
     def format_materials_field(self, title, materials):
-        return f"> {title} - {''.join([material + ', ' for material in materials])[:-2]}\n"
+        ret = f"> {title}:\n"
+        for material in materials:
+            ret += f"> \u0009{chr(self.count + 97)}. {material}\n"
+            self.count += 1
+        return ret
+        # return f"{title} - {''.join([material + ', ' for material in materials])[:-2]}\n"
 
     def format_embed(self):
         self.embed.set_thumbnail(url="https://upload-os-bbs.hoyolab.com/upload/2021/07/13/69629320/6a559ac21593156204bfa72c6faaea3b_6954693156943762270.gif?x-oss-process=image/resize,s_500/quality,q_80/auto-orient,0/interlace,1/format,gif")

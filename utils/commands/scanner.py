@@ -8,7 +8,8 @@ class TokenType(Enum):
     TO = 4
     AND = 5
     NUMBER = 6
-    COMMA = 7
+    STRING = 7
+    COMMA = 8
 
 KEYWORDS = {
     "set": TokenType.SET,
@@ -57,13 +58,13 @@ class Scanner():
                     if not self.end() and isCharacter(self.peek()):
                         continue
                     return Token(KEYWORDS[keyword], keyword, keyword)
-            print("keyword", keyword)
-            raise Exception("Unidentified keyword!")
+            # raise Exception("Unidentified keyword!")
+            return Token(TokenType.STRING, keyword, keyword)
         elif isNumber():
             number = self.next()
             while not self.end() and isNumber():
                 number += self.next()
-            return Token(TokenType.NUMBER, number, int(number))
+            return Token(TokenType.NUMBER, number, number)
         elif self.match(","):
             return Token(TokenType.COMMA, ",", ",")
         elif self.match("\n", " "):

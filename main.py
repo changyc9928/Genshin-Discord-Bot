@@ -12,9 +12,7 @@ from view.attending_view import AttendingView
 from query_graphql import query_image, query_artifact_domains
 from database.domains import Domains
 from utils.embed_formatter import EmbedFormatter
-from utils.commands.evaluator import Evaluator
-from utils.commands.parser import Parser
-from utils.commands.scanner import Scanner
+from utils.commands import Evaluator, Parser, Scanner
 
 
 class PaimonBot(commands.Bot):
@@ -270,13 +268,14 @@ async def wishHistory(ctx: commands.Context, uid: int):
 
 
 @bot.command()
-async def command(self, ctx: commands.Context, command: str):
+async def command(ctx: commands.Context, command: str):
         Coop.load_json()
         coop_json = Coop.convert_to_obj()
         print(command)
         scanner = Scanner(command)
         parser = Parser(scanner.scan())
-        evaluator = Evaluator(bot, parser.parse())
+        evaluator = Evaluator(bot, Coop, parser.parse())
+        await evaluator.evaluate()
 
 
 load_dotenv()

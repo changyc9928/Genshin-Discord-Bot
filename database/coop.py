@@ -40,6 +40,22 @@ class Coop:
             Coop.data[int(user_id)] = new_user
 
     @staticmethod
+    def edit_materials(user_id, order):
+        data = Coop.data[user_id]
+        materials = ["weapon", "leyline", "talent", "artifact", "world_boss", "trounce"]
+        index = 0
+        materials_index = 0
+        while index != order:
+            key = materials[materials_index]
+            for i in range(len(data[key])):
+                index += i
+                if index == order:
+                    # found the item to be deleted
+                    pass
+                else:
+                    continue
+
+    @staticmethod
     def add_user(user):
         if user.id not in Coop.data:
             Coop.data[user.id] = CoopData(user.name)
@@ -67,6 +83,8 @@ class Coop:
     def reset_data():
         Coop.data = {}
         Coop.save_json()
+
+    
 
 
 class CoopData:

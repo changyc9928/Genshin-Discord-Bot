@@ -1,12 +1,12 @@
-from scanner import TokenType, Scanner
-from evaluator import SetStatement, TimesStatement, TimeStatement
+from .evaluator import SetStatement, TimesStatement, TimeStatement
+from .scanner import TokenType, Scanner
 
-# Grammar rules
+# Grammar rules:
 # set_stmt -> "set" stmt *("and" stmt)
 # stmt -> times_stmt | time_stmt
 # times_stmt -> attribute "to" NUMBER "times"
 # time_stmt -> "time" "to" NUMBER
-# attribute -> NUMBER *("," attribute)
+# attribute -> STRING *("," attribute)
 
 class Parser():
     def __init__(self, tokens):
@@ -28,6 +28,7 @@ class Parser():
 
         root = SetStatement(self.stmt(), None)
         statement = root
+        # command chaining
         while self.match(TokenType.AND):
             and_stmt = self.stmt()
             statement.and_stmt = and_stmt
@@ -37,7 +38,7 @@ class Parser():
 
     # stmt -> times_stmt | time_stmt
     def stmt(self):
-        if self.peek().token_type == TokenType.NUMBER:
+        if self.peek().token_type == TokenType.STRING:
             return self.times_stmt()
         elif self.peek().token_type == TokenType.TIME:
             return self.time_stmt()
@@ -46,7 +47,7 @@ class Parser():
     def times_stmt(self):
         attributes = []
         # attribute -> NUMBER *("," attribute)
-        while self.match(TokenType.NUMBER):
+        while self.match(TokenType.STRING):
             attributes.append(self.previous().literal)
             if self.match(TokenType.COMMA):
                 continue
@@ -96,7 +97,7 @@ class Parser():
 
 
 if __name__ == "__main__":
-    command = "set time to 2245"
+    command = "set a,b to 2 times"
     scanner = Scanner(command)
     tokens = scanner.scan()
     parser = Parser(tokens)
