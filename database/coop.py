@@ -121,6 +121,27 @@ class CoopData:
         Coop.save_json()
         return ret
 
+    def remove(self, values):
+        ret = ""
+        for val in values:
+            if val in self.leyline:
+                self.leyline.remove(val)
+            elif val in self.weapon:
+                self.weapon.remove(val)
+            elif val in self.talent:
+                self.talent.remove(val)
+            elif val in self.artifact:
+                self.artifact.remove(val)
+            elif val in self.trounce:
+                self.trounce.remove(val)
+            elif val in self.world_boss:
+                self.world_boss.remove(val)
+            else:
+                continue
+            ret += f"You're calcelling {val}\n"
+        Coop.save_json()
+        return ret
+
     def change_time(self, msg):
         self.time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).replace(
             hour=int(msg[:2]), minute=int(msg[2:]), second=0, microsecond=0)

@@ -2,6 +2,7 @@ import discord
 import re
 
 from view.domain_type_view import DomainOptionView
+from view.dropdown_edit import DomainDropdownEditView
 from database.coop import Coop
 from utils.embed_formatter import EmbedFormatter
 
@@ -37,6 +38,11 @@ class AttendingButton(discord.ui.Button["AttendingView"]):
             await ask.delete_original_message()
             await response.delete()
             # await confirm.delete(delay=2)
+        elif self.label == "Remove plans":
+            if user.id not in Coop.data or Coop.data[user.id].attend == False:
+                await interaction.response.send_message(f"Hey {user.name}! You're not coming! Please tell Paimon that you're coming before you can remove you orders.")
+                return
+            await interaction.response.send_message(f"Please choose the booking(s) you want to cancel", view=DomainDropdownEditView(user.id), ephemeral=True)
         embed = discord.Embed(title="Today's Menu")
         embedFormatter = EmbedFormatter(Coop.convert_to_obj(), embed)
         embedFormatter.format_embed()
@@ -52,3 +58,5 @@ class AttendingView(discord.ui.View):
             "Skipping", discord.ButtonStyle.danger, bot))
         self.add_item(AttendingButton(
             "Set time", discord.ButtonStyle.secondary, bot))
+        self.add_item(AttendingButton(
+            "Remove plans", discord.ButtonStyle.secondary, bot))

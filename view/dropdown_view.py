@@ -30,7 +30,7 @@ class DomainDropdown(discord.ui.Select):
             await msg.edit(embed=embed)
             await interaction.response.send_message(ret, ephemeral=True)
         except Exception as e:
-            await interaction.response.send_message("Sorry, Paimon can't record book your domain for some reasons T T", ephemeral=True)
+            await interaction.response.send_message("Sorry, Paimon can't book your domain for some reasons T T", ephemeral=True)
             print(e)
 
 
